@@ -146,6 +146,7 @@ class AddToDoFragment : Fragment() {
     }
 
     private fun saveToDo() {
+        startDateTime = stringToLocalDateTime(binding.buttonDate.text.toString() +  " " + binding.buttonTime.text)
         Log.d("AddToDoFragment", "binding.todoName.text: ${binding.todoTitle.text}")
         val now: Instant = Instant.fromEpochMilliseconds(startDateTime)
         val today: LocalDate = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
