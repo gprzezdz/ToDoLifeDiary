@@ -47,8 +47,8 @@ class CommentFragment : Fragment() {
         }
         binding.buttonDeleteComment.setOnClickListener {
          val  builder: AlertDialog.Builder =AlertDialog.Builder(activity)
-            builder.setTitle("Remove comment")
-            builder.setMessage("Are you want remove this comment")
+            builder.setTitle("Delete comment")
+            builder.setMessage("Are you want delete this comment")
             builder.setPositiveButton("Yes") { dialog, _ ->
                 deleteComment()
                 dialog.cancel()
