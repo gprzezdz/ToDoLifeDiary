@@ -80,7 +80,7 @@ class DateListFragment : Fragment() {
             calendarView.date = toDoLifeViewModel.currentDateDay
             calendarView.firstDayOfWeek = 2
         }
-        binding.calendarView.setOnDateChangeListener { view, year, month, dayOfMonth -> // display the selected date by using a toast
+        binding.calendarView.setOnDateChangeListener { _, year, month, dayOfMonth -> // display the selected date by using a toast
             val sdf = SimpleDateFormat("dd/MM/yyyy")
             val miesiac = month + 1
             val mDate: Date = sdf.parse("$dayOfMonth/$miesiac/$year") as Date;
