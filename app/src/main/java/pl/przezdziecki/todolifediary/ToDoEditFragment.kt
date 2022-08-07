@@ -1,5 +1,6 @@
 package pl.przezdziecki.todolifediary
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -63,13 +64,24 @@ class ToDoEditFragment : Fragment() {
         binding.buttonUpdateTodo.setOnClickListener {
             updateToDo()
             val action = ToDoEditFragmentDirections.actionToDoEditFragmentToToDoDetailsFragment(itemToDo.todo_uuid)
-            this.findNavController().navigate(action)
+            findNavController().navigate(action)
         }
         binding.buttonDeleteTodo.setOnClickListener {
-            deleteToDo()
-           // toDoLifeViewModel.todoDateList.
-            val action = ToDoEditFragmentDirections.actionToDoEditFragmentToToDoListFragment(itemToDo.dateday)
-            this.findNavController().navigate(action)
+            val  builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+            builder.setTitle("Delete todo")
+            builder.setMessage("Are you want delete this todo task")
+            builder.setPositiveButton("Yes") { dialog, _ ->
+                deleteToDo()
+                val action = ToDoEditFragmentDirections.actionToDoEditFragmentToToDoListFragment(itemToDo.dateday)
+                findNavController().navigate(action)
+                dialog.cancel()
+            }
+            builder.setNegativeButton("No") { dialog, _ ->
+                dialog.cancel()
+            }
+            val alertDialog: AlertDialog =builder.create()
+            alertDialog.show()
+
         }
         binding.buttonDate.setOnClickListener {
             showDatePicker()
