@@ -36,6 +36,10 @@ class ItemToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
     override fun onBindViewHolder(holder: ToDoListViewHolder, position: Int) {
         Log.d("ItemToDoListAdapter", "item position: $position")
         val current = getItem(position)
+        if(current.closeDateTime>0)
+        {
+            holder.itemView.setBackgroundResource(R.color.light_green)
+        }
         holder.itemView.setOnClickListener {
             holder.itemView.setBackgroundColor(Color.LTGRAY)
             object : CountDownTimer(200, 200) {
