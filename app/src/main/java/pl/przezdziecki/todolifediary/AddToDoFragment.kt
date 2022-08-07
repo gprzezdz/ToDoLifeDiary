@@ -81,7 +81,7 @@ class AddToDoFragment : Fragment() {
         val sdfd = SimpleDateFormat("yyyy-MM-dd E", Locale.getDefault())
         val sdft = SimpleDateFormat("HH:mm", Locale.getDefault())
         binding.buttonDate.text = sdfd.format(parStartDateTime)
-        binding.buttonTime.text = sdft.format(parStartDateTime)
+        binding.buttonTime.text = sdft.format(Clock.System.now().toEpochMilliseconds())
         Log.d("AddToDoFragment", "setButtonsDateTimeText date ${binding.buttonDate.text}")
         Log.d("AddToDoFragment", "setButtonsDateTimeText time ${binding.buttonTime.text}")
     }
