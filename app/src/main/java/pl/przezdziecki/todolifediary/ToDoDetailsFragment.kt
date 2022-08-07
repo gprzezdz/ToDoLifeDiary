@@ -31,7 +31,7 @@ class ToDoDetailsFragment : Fragment() {
     lateinit var itemToDo: ToDoItem
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
             val action = ToDoDetailsFragmentDirections.actionToDoDetailsFragmentToDateListFragment()
            findNavController().navigate(action)
 
