@@ -1,11 +1,12 @@
 package pl.przezdziecki.todolifediary
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -27,19 +28,15 @@ class CommentFragment : Fragment() {
         )
     }
     private val binding get() = _binding!!
-    lateinit var itemComment: ToDoComment
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private lateinit var itemComment: ToDoComment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         itemComment = navigationArgs.todoComment
-        binding.buttonCancel.setOnClickListener() {
+        binding.buttonCancel.setOnClickListener {
             findNavController().navigateUp()
         }
-        binding.buttonClose.setOnClickListener() {
+        binding.buttonClose.setOnClickListener {
             saveComment()
         }
         binding.buttonDate.setOnClickListener {
@@ -48,8 +45,19 @@ class CommentFragment : Fragment() {
         binding.buttonTime.setOnClickListener {
             showTimePicker()
         }
-        binding.buttonDeleteComment.setOnClickListener(){
-            deleteComment()
+        binding.buttonDeleteComment.setOnClickListener {
+         val  builder: AlertDialog.Builder =AlertDialog.Builder(activity)
+            builder.setTitle("Remove comment")
+            builder.setMessage("Are you want remove this comment")
+            builder.setPositiveButton("Yes") { dialog, _ ->
+                deleteComment()
+                dialog.cancel()
+            }
+            builder.setNegativeButton("No") { dialog, _ ->
+                dialog.cancel()
+            }
+            val alertDialog:AlertDialog =builder.create()
+            alertDialog.show()
         }
         bind(itemComment)
     }
@@ -73,15 +81,16 @@ class CommentFragment : Fragment() {
             setButtonsDateTimeText(itemComment.comDateTime)
         }
 
+
     }
 
     private fun showTimePicker() {
-        val sdfhh = SimpleDateFormat("HH", Locale.getDefault())
-        val sdfmm = SimpleDateFormat("mm", Locale.getDefault())
+        val dash = SimpleDateFormat("HH", Locale.getDefault())
+        val scumm = SimpleDateFormat("mm", Locale.getDefault())
         val picker =
             MaterialTimePicker.Builder()
-                .setHour(sdfhh.format(itemComment.comDateTime).toInt())
-                .setMinute(sdfmm.format(itemComment.comDateTime).toInt())
+                .setHour(dash.format(itemComment.comDateTime).toInt())
+                .setMinute(scumm.format(itemComment.comDateTime).toInt())
                 .setTimeFormat(TimeFormat.CLOCK_24H)
                 .setTitleText("Select Appointment time")
                 .build()
@@ -99,7 +108,7 @@ class CommentFragment : Fragment() {
 
     private fun stringToLocalDateTime(parString: String): Long {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd E HH:mm")
-        var date: Date = dateFormat.parse(parString) as Date
+        val  date: Date = dateFormat.parse(parString) as Date
         return date.toInstant().toEpochMilli()
     }
 
@@ -162,11 +171,10 @@ class CommentFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         _binding = FragmentCommentBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
 }
