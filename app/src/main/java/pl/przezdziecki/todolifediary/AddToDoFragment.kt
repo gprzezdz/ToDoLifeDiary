@@ -61,9 +61,10 @@ class AddToDoFragment : Fragment() {
         binding.buttonTime.setOnClickListener {
             showTimePicker()
         }
-        binding.buttonCancellTodo.setOnClickListener{
+        binding.buttonCancellTodo.setOnClickListener {
             findNavController().navigateUp()
         }
+        Log.d("AddToDoFragment", "startDateTime  ${startDateTime}")
         if (startDateTime == 0.toLong()) {
             startDateTime = Clock.System.now().toEpochMilliseconds()
         }
@@ -107,13 +108,29 @@ class AddToDoFragment : Fragment() {
         }
     }
 
+    private fun LocalDateTimeToUTC(par: Long): Long {
+        return Instant.fromEpochMilliseconds(par).toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.UTC).toEpochMilliseconds()
+    }
+
 
     private fun showDatePicker() {
+        Log.d("AddToDoFragment","clock:" + Clock.System.now().toString())
+        Log.d(
+            "AddToDoFragment",
+            " showDatePicker startDateTime  ${startDateTime} : " + toDoLifeViewModel.getFormattedDateE(
+                startDateTime
+            ))
+                    Log.d(
+                    "AddToDoFragment",
+            " showDatePicker startDateTime  ${LocalDateTimeToUTC(startDateTime)} : " + toDoLifeViewModel.getFormattedDateE(
+                LocalDateTimeToUTC(startDateTime)
+            )
+        )
+
         val datePicker: MaterialDatePicker<Long> = MaterialDatePicker
             .Builder
             .datePicker()
-            .setSelection(startDateTime)
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .setSelection(LocalDateTimeToUTC(startDateTime))
             .setTitleText("Date to do")
             .build()
         datePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
@@ -151,7 +168,8 @@ class AddToDoFragment : Fragment() {
             Clock.System.now().toEpochMilliseconds()
         )
         toDoLifeViewModel.insertToDoItem(toDoItem)
-        val action = AddToDoFragmentDirections.actionAddToDoFragmentToToDoListFragment(todo.dateday)
+        val action =
+            AddToDoFragmentDirections.actionAddToDoFragmentToToDoDetailsFragment(toDoItem.todo_uuid)
         this.findNavController().navigate(action)
     }
 }

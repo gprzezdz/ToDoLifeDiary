@@ -32,7 +32,9 @@ class ToDoDetailsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
-            findNavController().navigateUp()
+            val action = ToDoDetailsFragmentDirections.actionToDoDetailsFragmentToDateListFragment()
+           findNavController().navigate(action)
+
         }
     }
 

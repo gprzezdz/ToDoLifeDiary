@@ -33,6 +33,9 @@
         <action
             android:id="@+id/action_addToDoFragment_to_toDoListFragment"
             app:destination="@id/toDoListFragment" />
+        <action
+            android:id="@+id/action_addToDoFragment_to_toDoDetailsFragment"
+            app:destination="@id/toDoDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/toDoListFragment"
@@ -72,6 +75,9 @@
         <action
             android:id="@+id/action_toDoDetailsFragment_to_commentFragment"
             app:destination="@id/commentFragment" />
+        <action
+            android:id="@+id/action_toDoDetailsFragment_to_DateListFragment"
+            app:destination="@id/DateListFragment" />
     </fragment>
     <fragment
         android:id="@+id/toDoEditFragment"
