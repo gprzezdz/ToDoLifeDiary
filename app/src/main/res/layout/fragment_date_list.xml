@@ -42,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/margin_between_elements"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="@dimen/margin_between_elements"
         android:contentDescription="@string/add_new_item"
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
