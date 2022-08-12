@@ -8,24 +8,36 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import pl.przezdziecki.todolifediary.databinding.ItemTodoListBinding
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toLocalDateTime
+import pl.przezdziecki.todolifediary.databinding.ItemHomeTodoListBinding
 import pl.przezdziecki.todolifediary.db.ToDoItem
 import pl.przezdziecki.todolifediary.db.getFormattedTime
+import java.text.SimpleDateFormat
+import java.util.*
 
-class ItemToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
-    ListAdapter<ToDoItem, ItemToDoListAdapter.ToDoListViewHolder>(DiffCallback) {
-
-    class ToDoListViewHolder(private var binding: ItemTodoListBinding) :
+class ItemHomeToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
+    ListAdapter<ToDoItem, ItemHomeToDoListAdapter.HomeToDoListViewHolder>(DiffCallback) {
+    val mDate: Date
+    class HomeToDoListViewHolder(private var binding: ItemHomeTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ToDoItem) {
             binding.todoStartTime.text = item.getFormattedTime() +" " +item.title
         }
     }
+    init {
+        val now: Instant = Clock.System.now()
+        val today: LocalDate =
+            now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date
+        val sdf = SimpleDateFormat("yyyy-MM-dd")
+         mDate  = sdf.parse(today.toString()) as Date;
+    }
 
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoListViewHolder {
-        return ToDoListViewHolder(
-            ItemTodoListBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHomeToDoListAdapter.HomeToDoListViewHolder {
+        return HomeToDoListViewHolder(
+            ItemHomeTodoListBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 )
@@ -33,15 +45,22 @@ class ItemToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
         )
     }
 
-    override fun onBindViewHolder(holder: ToDoListViewHolder, position: Int) {
-        Log.d("ItemToDoListAdapter", "item position: $position")
+    override fun onBindViewHolder(holder: HomeToDoListViewHolder, position: Int) {
+        Log.d("ItemHomeToDoListAdapter", "item position: $position")
         val current = getItem(position)
+        holder.itemView.setBackgroundColor(Color.WHITE)
         if(current.closeDateTime>0L)
         {
             holder.itemView.setBackgroundResource(R.color.light_green)
-        }else
+        }
+        else if(current.closeDateTime==0L && current.dateday<mDate.time)
         {
-            holder.itemView.setBackgroundColor(Color.WHITE)
+            holder.itemView.setBackgroundColor(Color.RED)
+        }
+        else if(current.closeDateTime==0L && current.startDateTime<Clock.System.now().toEpochMilliseconds())
+        {
+            Log.d("ItemHomeToDoListAdapter","current.startDateTime ${current.startDateTime} Clock.System.now().toEpochMilliseconds(): ${Clock.System.now().toEpochMilliseconds()}")
+            holder.itemView.setBackgroundColor(Color.YELLOW)
         }
         holder.itemView.setOnClickListener {
             holder.itemView.setBackgroundColor(Color.LTGRAY)

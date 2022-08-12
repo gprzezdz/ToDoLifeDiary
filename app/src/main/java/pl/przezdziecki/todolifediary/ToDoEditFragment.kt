@@ -53,7 +53,7 @@ class ToDoEditFragment : Fragment() {
             .observe(this.viewLifecycleOwner) { selectedItem ->
                 if(selectedItem==null)
                 {
-                    val action = ToDoEditFragmentDirections.actionToDoEditFragmentToDateListFragment()
+                    val action = ToDoEditFragmentDirections.actionToDoEditFragmentToHomeFragment()
                     findNavController().navigate(action)
 
                 }else {
@@ -72,7 +72,7 @@ class ToDoEditFragment : Fragment() {
             builder.setMessage("Are you want delete this todo task")
             builder.setPositiveButton("Yes") { dialog, _ ->
                 deleteToDo()
-                val action = ToDoEditFragmentDirections.actionToDoEditFragmentToDateListFragment()
+                val action = ToDoEditFragmentDirections.actionToDoEditFragmentToHomeFragment()
                 findNavController().navigate(action)
                 dialog.cancel()
             }
