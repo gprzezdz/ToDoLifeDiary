@@ -19,6 +19,11 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     var todoItemList: LiveData<List<ToDoItem>> = itemDao.getToDoItemByDate(-1).asLiveData()
   //  var todoCommentList: LiveData<List<ToDoComment>> = itemDao.getToDoItemComments(UUID.fromString("0000")).asLiveData()
 
+
+    fun getToDoItemTodayAndNotClosed(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getToDoItemTodayAndNotClosed(currentDateDay).asLiveData()
+    }
+
     fun saveDateItem(todo: ToDoDate) {
         viewModelScope.launch { itemDao.insertDateItem(todo) }
     }
@@ -44,8 +49,8 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
         return  itemDao.getDateItems().asLiveData()
     }
 
-    fun loadToDoItems(time: Long) {
-        todoItemList = itemDao.getToDoItemByDate(time).asLiveData()
+    fun loadToDoItems(time: Long):LiveData<List<ToDoItem>> {
+        return itemDao.getToDoItemByDate(time).asLiveData()
     }
 
     fun getToDoItemComments(todoUuid: UUID): LiveData<List<ToDoComment>> {
