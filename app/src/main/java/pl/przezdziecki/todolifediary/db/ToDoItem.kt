@@ -30,11 +30,11 @@ data class ToDoItem(
 
     @NonNull
     @ColumnInfo(name = "close_date_time")
-    var closeDateTime :Long,
+    var closeDateTime :Long=0,
 
     @NonNull
     @ColumnInfo(name = "insert_date_time")
-    var insertDateTime:Long,
+    var insertDateTime:Long=0,
 
     )
 fun ToDoItem.getFormattedTime(): String {
