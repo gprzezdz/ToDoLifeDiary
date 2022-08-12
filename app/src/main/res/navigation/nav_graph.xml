@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/DateListFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/DateListFragment"
+        android:id="@+id/dateListFragment"
         android:name="pl.przezdziecki.todolifediary.DateListFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_date_list">
@@ -50,7 +50,7 @@
             app:destination="@id/commentFragment" />
         <action
             android:id="@+id/action_toDoDetailsFragment_to_DateListFragment"
-            app:destination="@id/DateListFragment" />
+            app:destination="@id/dateListFragment" />
     </fragment>
     <fragment
         android:id="@+id/toDoEditFragment"
@@ -64,8 +64,8 @@
             android:id="@+id/action_toDoEditFragment_to_toDoDetailsFragment"
             app:destination="@id/toDoDetailsFragment" />
         <action
-            android:id="@+id/action_toDoEditFragment_to_DateListFragment"
-            app:destination="@id/DateListFragment" />
+            android:id="@+id/action_toDoEditFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/commentFragment"
@@ -83,6 +83,18 @@
             android:id="@+id/action_commentFragment_to_toDoDetailsFragment"
             app:destination="@id/toDoDetailsFragment" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="pl.przezdziecki.todolifediary.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_toDoDetailsFragment"
+            app:destination="@id/toDoDetailsFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_dateListFragment"
+            app:destination="@id/dateListFragment" />
     </fragment>
 
 </navigation>
