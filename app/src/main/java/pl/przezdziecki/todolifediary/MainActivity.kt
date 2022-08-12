@@ -1,7 +1,7 @@
 package pl.przezdziecki.todolifediary
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -9,6 +9,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import pl.przezdziecki.todolifediary.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -21,14 +23,27 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setSupportActionBar(binding.toolbar)
-
-    //    val navController = findNavController(R.id.nav_host_fragment_content_main)
-     //   appBarConfiguration = AppBarConfiguration(navController.graph)
-       // setupActionBarWithNavController(navController, appBarConfiguration)
+        val navView: BottomNavigationView = binding.bottomNavigation
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            Log.d("MainActivity", "binding Bottom menu click: " + item.toString())
+            when (item.itemId) {
+                R.id.homeFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.homeFragment)
+                    true
+                }
+                R.id.dateListFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.dateListFragment)
+                    true
+                }
+                else -> false
+            }
+        }
     }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.menu_main, menu)
