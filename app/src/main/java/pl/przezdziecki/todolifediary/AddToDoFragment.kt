@@ -34,11 +34,6 @@ class AddToDoFragment : Fragment() {
             (activity?.application as ToDoLiveDiaryApplication).database.itemDao()
         )
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -81,7 +76,7 @@ class AddToDoFragment : Fragment() {
         val sdfd = SimpleDateFormat("yyyy-MM-dd E", Locale.getDefault())
         val sdft = SimpleDateFormat("HH:mm", Locale.getDefault())
         binding.buttonDate.text = sdfd.format(parStartDateTime)
-        binding.buttonTime.text = sdft.format(Clock.System.now().toEpochMilliseconds())
+        binding.buttonTime.text = sdft.format(parStartDateTime)
         Log.d("AddToDoFragment", "setButtonsDateTimeText date ${binding.buttonDate.text}")
         Log.d("AddToDoFragment", "setButtonsDateTimeText time ${binding.buttonTime.text}")
     }
