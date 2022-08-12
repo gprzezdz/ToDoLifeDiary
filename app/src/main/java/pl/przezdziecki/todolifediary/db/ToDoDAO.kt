@@ -15,6 +15,9 @@ interface ToDoDAO {
     @Query("SELECT * from todoitem_table WHERE dateday = :id order by start_date_time asc ")
     fun getToDoItemByDate(id: Long): Flow<List<ToDoItem>>
 
+    @Query("SELECT * from todoitem_table WHERE (dateday < :id and close_date_time=0) or dateday = :id order by start_date_time asc ")
+    fun getToDoItemTodayAndNotClosed(id: Long): Flow<List<ToDoItem>>
+
     @Query("SELECT * from todoitem_table WHERE todo_uuid = :id ")
      fun getToDoItem(id: UUID):  Flow<ToDoItem>
 
