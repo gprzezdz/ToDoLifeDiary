@@ -102,4 +102,6 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="comments">Comments</string>
+    <string name="text_menu_home">Home</string>
+    <string name="text_menu_calendar">Calendar</string>
 </resources>
