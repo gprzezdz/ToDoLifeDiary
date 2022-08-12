@@ -53,7 +53,7 @@ class DateListFragment : Fragment() {
         Log.d("DateListFragment", "onViewCreated")
         binding.recyclerViewDate.layoutManager = GridLayoutManager(this.context, 1)
         binding.recyclerViewDate.adapter = adapter
-        toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
+        toDoLifeViewModel.todoItemList= toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
         toDoLifeViewModel.todoItemList.observe(this.viewLifecycleOwner) { items ->
             items.let {
                 adapter.submitList(it)
@@ -85,7 +85,7 @@ class DateListFragment : Fragment() {
             val miesiac = month + 1
             val mDate: Date = sdf.parse("$dayOfMonth/$miesiac/$year") as Date;
             toDoLifeViewModel.currentDateDay=mDate.time
-            toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
+            toDoLifeViewModel.todoItemList=toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
             toDoLifeViewModel.todoItemList.observe(this.viewLifecycleOwner) { items ->
                 items.let {
                     (binding.recyclerViewDate.adapter as ItemToDoListAdapter).submitList(it)
