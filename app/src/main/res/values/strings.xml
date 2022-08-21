@@ -104,4 +104,9 @@
     <string name="comments">Comments</string>
     <string name="text_menu_home">Home</string>
     <string name="text_menu_calendar">Calendar</string>
+    <string name="photo_camera_permissions">Unable to make photo without permissions</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="photo_description">Photo description</string>
+    <string name="delete">Delete</string>
 </resources>

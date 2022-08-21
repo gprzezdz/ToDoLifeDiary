@@ -21,11 +21,13 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 
 /**
  * Database class with a singleton INSTANCE object.
  */
-@Database(entities = [ToDoDate::class, ToDoItem::class,ToDoComment::class], version = 4, exportSchema = false)
+@Database(entities = [ToDoDate::class, ToDoItem::class,ToDoComment::class], version = 5, exportSchema = false)
 abstract class ToDoRoomDatabase : RoomDatabase() {
 
     abstract fun itemDao(): ToDoDAO
@@ -38,13 +40,17 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
+               val MIGRATION_4_5 = object : Migration( 4,5) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        database.execSQL("alter table todocomment_table add column file_type text not null default ''")
+                    }
+                }
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ToDoRoomDatabase::class.java,
                     "todo_database"
                 )
-                    // Wipes and rebuilds instead of migrating if no Migration object.
-                    // Migration is not part of this codelab.
+                    .addMigrations(MIGRATION_4_5)
                     .fallbackToDestructiveMigration()
                     .build()
                 Log.d("ToDoRoomDatabase", "instancje null")
