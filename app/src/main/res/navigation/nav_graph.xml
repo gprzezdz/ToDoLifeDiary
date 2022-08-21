@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_toDoDetailsFragment_to_DateListFragment"
             app:destination="@id/dateListFragment" />
+        <action
+            android:id="@+id/action_toDoDetailsFragment_to_commentPhotoFragment"
+            app:destination="@id/commentPhotoFragment" />
     </fragment>
     <fragment
         android:id="@+id/toDoEditFragment"
@@ -96,5 +99,19 @@
             android:id="@+id/action_homeFragment_to_dateListFragment"
             app:destination="@id/dateListFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/commentPhotoFragment"
+        android:name="pl.przezdziecki.todolifediary.CommentPhotoFragment"
+        android:label="fragment_comment_photo"
+        tools:layout="@layout/fragment_comment_photo" >
+        <argument
+            android:name="todoPhotoEx"
+            app:argType="pl.przezdziecki.todolifediary.data.ToDoPhotoEx" />
+        <argument
+            android:name="action_close"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
+
 
 </navigation>
