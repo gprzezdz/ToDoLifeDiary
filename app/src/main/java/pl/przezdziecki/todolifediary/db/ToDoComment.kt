@@ -39,6 +39,9 @@ data class ToDoComment(
     @NonNull
     @ColumnInfo(name = "insert_date_time")
     var insertDateTime: Long,
+    @NonNull
+    @ColumnInfo(name = "file_type")
+    var fileType: String="",
 ) : Serializable
 
 fun ToDoComment.getFormattedDateTime(): String {

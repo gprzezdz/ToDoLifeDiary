@@ -21,7 +21,7 @@ interface ToDoDAO {
     @Query("SELECT * from todoitem_table WHERE todo_uuid = :id ")
      fun getToDoItem(id: UUID):  Flow<ToDoItem>
 
-    @Query("SELECT * from todocomment_table WHERE todo_uuid = :id order by com_date_time asc")
+    @Query("SELECT * from todocomment_table WHERE todo_uuid = :id order by com_date_time desc")
     fun getToDoItemComments(id: UUID):  Flow<List<ToDoComment>>
 
     @Query("SELECT * from todocomment_table WHERE comment_uuid = :id ")

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <external-files-path
+        name="todo_photo"
+        path="Android/data/pl.przezdziecki.todolifediary/files/Photos" />
+    <external-files-path
+        name="todo_debug_photo"
+        path="/storage/emulated/Android/data/pl.przezdziecki.todolifediary/files/Photos" />
+    <external-files-path
+        name="todo_root_photo"
+        path="/" />
+</paths>

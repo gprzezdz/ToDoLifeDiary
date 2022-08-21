@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import pl.przezdziecki.todolifediary.databinding.ActivityMainBinding
+import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
@@ -43,6 +44,12 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+      /*  val file = File( baseContext.getFilesDir(),"/imagedata/")
+        file.mkdir()
+        val file1 = File( baseContext.getFilesDir(),"/imagedata/test.txt")
+        file1.writeText("test3")
+*/
+
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
