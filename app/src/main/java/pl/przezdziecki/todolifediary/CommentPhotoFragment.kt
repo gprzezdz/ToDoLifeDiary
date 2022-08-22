@@ -1,19 +1,14 @@
 package pl.przezdziecki.todolifediary
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
-import android.widget.ImageView
-import android.widget.RelativeLayout
-import androidx.core.graphics.drawable.toBitmap
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -26,7 +21,6 @@ import java.io.File
 private var TAG: String = "CommentPhotoFragment"
 
 class CommentPhotoFragment : Fragment() {
-    private var zoomOut: Boolean = false
     private var _binding: FragmentCommentPhotoBinding? = null
     private val navigationArgs: CommentPhotoFragmentArgs by navArgs()
     private val binding get() = _binding!!
@@ -54,7 +48,7 @@ class CommentPhotoFragment : Fragment() {
             binding.buttonDeletePhoto.visibility = View.VISIBLE
             binding.buttonDeletePhoto.setOnClickListener {
 
-                val  builder: AlertDialog.Builder =AlertDialog.Builder(activity)
+                val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
                 builder.setTitle("Delete  photo")
                 builder.setMessage("Are you want delete this photo")
                 builder.setPositiveButton("Yes") { dialog, _ ->
@@ -69,7 +63,7 @@ class CommentPhotoFragment : Fragment() {
                 builder.setNegativeButton("No") { dialog, _ ->
                     dialog.cancel()
                 }
-                val alertDialog:AlertDialog =builder.create()
+                val alertDialog: AlertDialog = builder.create()
                 alertDialog.show()
             }
         }
@@ -94,34 +88,18 @@ class CommentPhotoFragment : Fragment() {
 
     private fun setFullImage() {
         binding.photoId.setOnClickListener {
-
-            val img: ImageView = ImageView(context)
-            with(img) {
-                setImageBitmap(binding.photoId.drawable.toBitmap())
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                scaleType = ImageView.ScaleType.FIT_CENTER;
-            }
-            val root = RelativeLayout(activity)
-            root.layoutParams =
-                ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-            val dialog = Dialog(context!!)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setContentView(img)
-            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.WHITE))
-            dialog.window!!.setLayout(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
+            val file = File(Uri.parse(toDoPhotoEx.photoUriString).path)
+            val uri = FileProvider.getUriForFile(
+                context!!,
+                "pl.przezdziecki.todolifediary.fileprovider",
+                file
             )
-            img.setOnClickListener {
-                dialog.dismiss()
-            }
-            dialog.show()
+            val intent = Intent()
+            intent.action = Intent.ACTION_VIEW
+            Log.d(TAG, "File image to open ${uri}")
+            intent.setDataAndType(uri, "image/*")
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(intent)
         }
     }
 
