@@ -1,6 +1,7 @@
 package pl.przezdziecki.todolifediary
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -11,12 +12,11 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import pl.przezdziecki.todolifediary.databinding.FragmentTodoDetailsBinding
 import pl.przezdziecki.todolifediary.databinding.FragmentTodoEditBinding
 import pl.przezdziecki.todolifediary.db.ToDoItem
-import pl.przezdziecki.todolifediary.db.getFormattedDateTime
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,23 +51,26 @@ class ToDoEditFragment : Fragment() {
         Log.d("ToDoEditFragment", "onViewCreated")
         toDoLifeViewModel.loadToDoItem(navigationArgs.todoUuid)
             .observe(this.viewLifecycleOwner) { selectedItem ->
-                if(selectedItem==null)
-                {
+                if (selectedItem == null) {
                     val action = ToDoEditFragmentDirections.actionToDoEditFragmentToHomeFragment()
                     findNavController().navigate(action)
 
-                }else {
+                } else {
                     itemToDo = selectedItem
                     bind(itemToDo)
                 }
             }
+        binding.buttonTodoType.setOnClickListener {
+            toDoTypeDialog()
+        }
         binding.buttonUpdateTodo.setOnClickListener {
             updateToDo()
-            val action = ToDoEditFragmentDirections.actionToDoEditFragmentToToDoDetailsFragment(itemToDo.todo_uuid)
+            val action =
+                ToDoEditFragmentDirections.actionToDoEditFragmentToToDoDetailsFragment(itemToDo.todo_uuid)
             findNavController().navigate(action)
         }
         binding.buttonDeleteTodo.setOnClickListener {
-            val  builder: AlertDialog.Builder = AlertDialog.Builder(activity)
+            val builder: AlertDialog.Builder = AlertDialog.Builder(activity)
             builder.setTitle("Delete todo")
             builder.setMessage("Are you want delete this todo task")
             builder.setPositiveButton("Yes") { dialog, _ ->
@@ -79,7 +82,7 @@ class ToDoEditFragment : Fragment() {
             builder.setNegativeButton("No") { dialog, _ ->
                 dialog.cancel()
             }
-            val alertDialog: AlertDialog =builder.create()
+            val alertDialog: AlertDialog = builder.create()
             alertDialog.show()
 
         }
@@ -89,9 +92,23 @@ class ToDoEditFragment : Fragment() {
         binding.buttonTime.setOnClickListener {
             showTimePicker()
         }
-        binding.buttonCancelTodo.setOnClickListener{
+        binding.buttonCancelTodo.setOnClickListener {
             findNavController().navigateUp()
         }
+    }
+
+    private fun toDoTypeDialog() {
+        val types = arrayOf("Year", "Month", "Week", "Day")
+        val ii = types.indexOf(binding.buttonTodoType.text)
+
+        val m = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Chose type")
+            .setSingleChoiceItems(types, ii, DialogInterface.OnClickListener { dialogInterface, i ->
+                binding.buttonTodoType.text = types[i]
+                dialogInterface.dismiss()
+            })
+            .create()
+        m.show()
     }
 
     private fun bind(toDoItem: ToDoItem) {
@@ -99,14 +116,36 @@ class ToDoEditFragment : Fragment() {
             todoTitle.setText(toDoItem.title)
             todoDescription.setText(toDoItem.description)
             setButtonsDateTimeText(toDoItem.startDateTime)
+            setToDoType(toDoItem)
         }
+    }
+
+    private fun setToDoType(toDoItem: ToDoItem) {
+        binding.buttonTodoType.text = "Day"
+
+        if (toDoItem.todoType == "YEAR") {
+            binding.buttonTodoType.text = "Year"
+        }
+        if (toDoItem.todoType == "MONTH") {
+            binding.buttonTodoType.text = "Month"
+        }
+        if (toDoItem.todoType == "WEEK") {
+            binding.buttonTodoType.text = "Week"
+        }
+        if (toDoItem.todoType == "DAY") {
+            binding.buttonTodoType.text = "Day"
+        }
+
     }
 
     private fun updateToDo() {
         Log.d("ToDoEditFragment", "updateToDo")
-        itemToDo.title= binding.todoTitle.text.toString()
+        itemToDo.title = binding.todoTitle.text.toString()
+        itemToDo.description = binding.todoDescription.text.toString()
+        itemToDo.todoType = binding.buttonTodoType.text.toString().uppercase()
         toDoLifeViewModel.saveToDoItem(itemToDo)
     }
+
     private fun deleteToDo() {
         Log.d("ToDoEditFragment", "updateToDo")
         toDoLifeViewModel.deleteToDoItem(itemToDo)
@@ -117,6 +156,7 @@ class ToDoEditFragment : Fragment() {
         var date: Date = dateFormat.parse(parString) as Date
         return date.toInstant().toEpochMilli()
     }
+
     private fun setButtonsDateTimeText(parStartDateTime: Long) {
         val sdfd = SimpleDateFormat("yyyy-MM-dd E", Locale.getDefault())
         val sdft = SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -147,6 +187,7 @@ class ToDoEditFragment : Fragment() {
             Log.d("AddToDoFragment", "minute: ${picker.minute}")
         }
     }
+
     private fun showDatePicker() {
         val datePicker: MaterialDatePicker<Long> = MaterialDatePicker
             .Builder
@@ -161,6 +202,9 @@ class ToDoEditFragment : Fragment() {
             val date = sdf.format(it)
             Log.d("AddToDoFragment", "selected todo date $date")
             itemToDo.startDateTime = stringToLocalDateTime(date + " " + binding.buttonTime.text)
+            val sdff = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val mDate: Date = sdff.parse(sdff.format(it)) as Date;
+            itemToDo.dateday = mDate.time
             setButtonsDateTimeText(itemToDo.startDateTime)
         }
 

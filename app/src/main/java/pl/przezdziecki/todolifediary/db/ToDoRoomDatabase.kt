@@ -27,7 +27,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 /**
  * Database class with a singleton INSTANCE object.
  */
-@Database(entities = [ToDoDate::class, ToDoItem::class,ToDoComment::class], version = 5, exportSchema = false)
+@Database(
+    entities = [ToDoDate::class, ToDoItem::class, ToDoComment::class],
+    version = 6,
+    exportSchema = false
+)
 abstract class ToDoRoomDatabase : RoomDatabase() {
 
     abstract fun itemDao(): ToDoDAO
@@ -40,9 +44,15 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
-               val MIGRATION_4_5 = object : Migration( 4,5) {
+                val MIGRATION_4_5 = object : Migration(4, 5) {
                     override fun migrate(database: SupportSQLiteDatabase) {
                         database.execSQL("alter table todocomment_table add column file_type text not null default ''")
+                    }
+                }
+                val MIGRATION_5_6 = object : Migration(5, 6) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        database.execSQL("alter table todoitem_table add column todo_type text not null default 'DAY'")
+                        database.execSQL("update  todoitem_table set todo_type = 'DAY'")
                     }
                 }
                 val instance = Room.databaseBuilder(
@@ -51,6 +61,7 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
                     "todo_database"
                 )
                     .addMigrations(MIGRATION_4_5)
+                    .addMigrations(MIGRATION_5_6)
                     .fallbackToDestructiveMigration()
                     .build()
                 Log.d("ToDoRoomDatabase", "instancje null")

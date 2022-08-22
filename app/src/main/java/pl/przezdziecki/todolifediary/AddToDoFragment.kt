@@ -1,5 +1,6 @@
 package pl.przezdziecki.todolifediary
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.datetime.*
@@ -20,7 +22,6 @@ import pl.przezdziecki.todolifediary.db.ToDoItem
 import java.text.SimpleDateFormat
 import java.time.format.TextStyle
 import java.util.*
-
 
 
 class AddToDoFragment : Fragment() {
@@ -64,8 +65,24 @@ class AddToDoFragment : Fragment() {
             startDateTime = Clock.System.now().toEpochMilliseconds()
         }
         setButtonsDateTimeText(startDateTime)
+        binding.buttonTodoType.setOnClickListener {
+            toDoTypeDialog()
+        }
     }
 
+    private fun toDoTypeDialog() {
+        val types = arrayOf("Year", "Month", "Week", "Day")
+        val ii = types.indexOf(binding.buttonTodoType.text)
+
+        val m = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Chose type")
+            .setSingleChoiceItems(types, ii, DialogInterface.OnClickListener { dialogInterface, i ->
+                binding.buttonTodoType.text = types[i]
+                dialogInterface.dismiss()
+            })
+            .create()
+        m.show()
+    }
     private fun stringToLocalDateTime(parString: String): Long {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd E HH:mm")
         var date: Date = dateFormat.parse(parString) as Date
@@ -104,19 +121,21 @@ class AddToDoFragment : Fragment() {
     }
 
     private fun LocalDateTimeToUTC(par: Long): Long {
-        return Instant.fromEpochMilliseconds(par).toLocalDateTime(TimeZone.currentSystemDefault()).toInstant(TimeZone.UTC).toEpochMilliseconds()
+        return Instant.fromEpochMilliseconds(par).toLocalDateTime(TimeZone.currentSystemDefault())
+            .toInstant(TimeZone.UTC).toEpochMilliseconds()
     }
 
 
     private fun showDatePicker() {
-        Log.d("AddToDoFragment","clock:" + Clock.System.now().toString())
+        Log.d("AddToDoFragment", "clock:" + Clock.System.now().toString())
         Log.d(
             "AddToDoFragment",
             " showDatePicker startDateTime  ${startDateTime} : " + toDoLifeViewModel.getFormattedDateE(
                 startDateTime
-            ))
-                    Log.d(
-                    "AddToDoFragment",
+            )
+        )
+        Log.d(
+            "AddToDoFragment",
             " showDatePicker startDateTime  ${LocalDateTimeToUTC(startDateTime)} : " + toDoLifeViewModel.getFormattedDateE(
                 LocalDateTimeToUTC(startDateTime)
             )
@@ -141,7 +160,8 @@ class AddToDoFragment : Fragment() {
     }
 
     private fun saveToDo() {
-        startDateTime = stringToLocalDateTime(binding.buttonDate.text.toString() +  " " + binding.buttonTime.text)
+        startDateTime =
+            stringToLocalDateTime(binding.buttonDate.text.toString() + " " + binding.buttonTime.text)
         Log.d("AddToDoFragment", "binding.todoName.text: ${binding.todoTitle.text}")
         val now: Instant = Instant.fromEpochMilliseconds(startDateTime)
         val today: LocalDate = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
@@ -161,7 +181,8 @@ class AddToDoFragment : Fragment() {
             binding.todoDescription.text.toString(),
             startDateTime,
             0,
-            Clock.System.now().toEpochMilliseconds()
+            Clock.System.now().toEpochMilliseconds(),
+            binding.buttonTodoType.text.toString().uppercase()
         )
         toDoLifeViewModel.insertToDoItem(toDoItem)
         val action =

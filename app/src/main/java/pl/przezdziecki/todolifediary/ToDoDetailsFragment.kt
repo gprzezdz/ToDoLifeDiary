@@ -276,13 +276,12 @@ class ToDoDetailsFragment : Fragment() {
     private fun bind(toDoItem: ToDoItem) {
         binding.apply {
             if (toDoItem.closeDateTime > 0L) {
-                todofulldate.text =
-                    toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime) + " <--->" + toDoLifeViewModel.getFormattedDateTimeE(
+                todofulldate.text = toDoItem.todoType+ ": "+
+                    toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime) + "<--->" + toDoLifeViewModel.getFormattedDateTimeE(
                         toDoItem.closeDateTime
                     )
             } else {
-                todofulldate.text = toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime)
-
+                todofulldate.text =  toDoItem.todoType+ ": "+ toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime)
             }
             title.text = toDoItem.title
             description.text = toDoItem.description

@@ -22,6 +22,7 @@
             android:layout_marginBottom="8dp"
             android:text="2022-01-01 śr"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_time"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button
@@ -32,6 +33,18 @@
             android:layout_marginBottom="8dp"
             android:text="06:00 śr"
             app:layout_constraintStart_toEndOf="@+id/button_date"
+            app:layout_constraintEnd_toStartOf="@id/button_todo_type"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/button_todo_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="Day"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/button_time"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
