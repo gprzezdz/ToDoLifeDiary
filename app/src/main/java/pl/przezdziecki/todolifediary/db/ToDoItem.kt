@@ -21,6 +21,7 @@ data class ToDoItem(
     @NonNull
     @ColumnInfo(name = "title")
     var title :String="",
+
     @NonNull
     @ColumnInfo(name = "description")
     var description :String="",
@@ -36,7 +37,12 @@ data class ToDoItem(
     @ColumnInfo(name = "insert_date_time")
     var insertDateTime:Long=0,
 
+    @NonNull
+    @ColumnInfo(name = "todo_type")
+    var todoType :String="DAY",
+
     )
+
 fun ToDoItem.getFormattedTime(): String {
     return SimpleDateFormat("HH:mm", Locale.getDefault()).format(startDateTime)
 }

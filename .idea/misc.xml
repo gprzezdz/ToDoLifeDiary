@@ -16,7 +16,7 @@
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.44375" />
         <entry key="app/src/main/res/layout/fragment_to_do_details.xml" value="0.13958333333333334" />
         <entry key="app/src/main/res/layout/fragment_todo_details.xml" value="0.3027040560841262" />
-        <entry key="app/src/main/res/layout/fragment_todo_edit.xml" value="0.44375" />
+        <entry key="app/src/main/res/layout/fragment_todo_edit.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_todo_list.xml" value="0.12460063897763578" />
         <entry key="app/src/main/res/layout/item_comment_list.xml" value="0.45677083333333335" />
         <entry key="app/src/main/res/layout/item_date_list.xml" value="0.3836050724637681" />
