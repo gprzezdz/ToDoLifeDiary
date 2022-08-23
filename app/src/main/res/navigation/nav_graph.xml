@@ -6,10 +6,10 @@
     app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/dateListFragment"
-        android:name="pl.przezdziecki.todolifediary.DateListFragment"
+        android:id="@+id/calendarFragment"
+        android:name="pl.przezdziecki.todolifediary.CalendarFragment"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_date_list">
+        tools:layout="@layout/fragment_calendar">
         <action
             android:id="@+id/action_DateListFragment_to_addToDoFragment"
             app:destination="@id/addToDoFragment" />
@@ -50,7 +50,7 @@
             app:destination="@id/commentFragment" />
         <action
             android:id="@+id/action_toDoDetailsFragment_to_DateListFragment"
-            app:destination="@id/dateListFragment" />
+            app:destination="@id/calendarFragment" />
         <action
             android:id="@+id/action_toDoDetailsFragment_to_commentPhotoFragment"
             app:destination="@id/commentPhotoFragment" />
@@ -97,7 +97,7 @@
             app:destination="@id/toDoDetailsFragment" />
         <action
             android:id="@+id/action_homeFragment_to_dateListFragment"
-            app:destination="@id/dateListFragment" />
+            app:destination="@id/calendarFragment" />
     </fragment>
     <fragment
         android:id="@+id/commentPhotoFragment"
@@ -112,6 +112,15 @@
             app:argType="string"
             android:defaultValue='""' />
     </fragment>
-
+    <fragment
+        android:id="@+id/wikiFragment"
+        android:name="pl.przezdziecki.todolifediary.WikiFragment"
+        android:label="fragment_wiki"
+        tools:layout="@layout/fragment_wiki" />
+    <fragment
+        android:id="@+id/contactsFragment"
+        android:name="pl.przezdziecki.todolifediary.ContactsFragment"
+        android:label="fragment_contacts"
+        tools:layout="@layout/fragment_contacts" />
 
 </navigation>

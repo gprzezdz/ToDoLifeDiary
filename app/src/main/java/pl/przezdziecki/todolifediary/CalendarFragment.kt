@@ -5,24 +5,24 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import kotlinx.datetime.*
-import kotlinx.datetime.TimeZone.Companion.currentSystemDefault
-import pl.przezdziecki.todolifediary.databinding.FragmentDateListBinding
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.toLocalDateTime
+import pl.przezdziecki.todolifediary.databinding.FragmentCalendarBinding
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.TimeZone
 
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class DateListFragment : Fragment() {
-    private var _binding: FragmentDateListBinding? = null
+class CalendarFragment : Fragment() {
+    private var _binding: FragmentCalendarBinding? = null
     private val toDoLifeViewModel: ToDoLifeViewModel by activityViewModels {
         ToDoLifeViewModel.ToDoLifeViewModelFactory(
             (activity?.application as ToDoLiveDiaryApplication).database.itemDao()
@@ -35,7 +35,7 @@ class DateListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentDateListBinding.inflate(inflater, container, false)
+        _binding = FragmentCalendarBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -45,12 +45,12 @@ class DateListFragment : Fragment() {
         val adapter = ItemToDoListAdapter {
             Log.d("ToDoListFragment", "kliknął ${it.todo_uuid}")
             val action =
-                DateListFragmentDirections.actionDateListFragmentToToDoDetailsFragment(it.todo_uuid)
+                CalendarFragmentDirections.actionDateListFragmentToToDoDetailsFragment(it.todo_uuid)
             this.findNavController().navigate(action)
         }
 
         initCalendar()
-        Log.d("DateListFragment", "onViewCreated")
+        Log.d("CalendarFragment", "onViewCreated")
         binding.recyclerViewDate.layoutManager = GridLayoutManager(this.context, 1)
         binding.recyclerViewDate.adapter = adapter
         toDoLifeViewModel.todoItemList= toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
@@ -61,7 +61,7 @@ class DateListFragment : Fragment() {
         }
         binding.buttonTodoAdd.setOnClickListener {
             val action =
-                DateListFragmentDirections.actionDateListFragmentToAddToDoFragment(toDoLifeViewModel.currentDateDay)
+               CalendarFragmentDirections.actionDateListFragmentToAddToDoFragment(toDoLifeViewModel.currentDateDay)
             this.findNavController().navigate(action)
         }
         binding.recyclerViewDate.setHasFixedSize(true)
