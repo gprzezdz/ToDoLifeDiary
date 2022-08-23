@@ -8,7 +8,15 @@
         android:title="@string/text_menu_home"/>
 
     <item
-        android:id="@+id/dateListFragment"
+        android:id="@+id/calendarFragment"
         android:enabled="true"
         android:title="@string/text_menu_calendar"/>
+    <item
+        android:id="@+id/wikiFragment"
+        android:enabled="true"
+        android:title="@string/wiki"/>
+    <item
+        android:id="@+id/contactsFragment"
+        android:enabled="true"
+        android:title="@string/contacts"/>
 </menu>

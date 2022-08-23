@@ -13,7 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import pl.przezdziecki.todolifediary.databinding.ActivityMainBinding
 import java.io.File
-
+private var TAG: String = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -31,25 +31,27 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         binding.bottomNavigation.setOnItemSelectedListener { item ->
-            Log.d("MainActivity", "binding Bottom menu click: " + item.toString())
+            Log.d(TAG, "binding Bottom menu click: " + item.toString())
             when (item.itemId) {
                 R.id.homeFragment -> {
                     findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.homeFragment)
                     true
                 }
-                R.id.dateListFragment -> {
-                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.dateListFragment)
+                R.id.calendarFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.calendarFragment)
+                    true
+                }
+                R.id.wikiFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.wikiFragment)
+                    true
+                }
+                R.id.contactsFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.contactsFragment)
                     true
                 }
                 else -> false
             }
         }
-      /*  val file = File( baseContext.getFilesDir(),"/imagedata/")
-        file.mkdir()
-        val file1 = File( baseContext.getFilesDir(),"/imagedata/test.txt")
-        file1.writeText("test3")
-*/
-
     }
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.

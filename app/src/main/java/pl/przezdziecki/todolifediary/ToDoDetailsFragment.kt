@@ -83,7 +83,7 @@ class ToDoDetailsFragment : Fragment() {
             }
         }
 
-        Log.d("DateListFragment", "onViewCreated")
+        Log.d("CalendarFragment", "onViewCreated")
         binding.recyclerComments.layoutManager = GridLayoutManager(this.context, 1)
         binding.recyclerComments.adapter = adapter
         toDoLifeViewModel.getToDoItemComments(navigationArgs.todoUuid)
