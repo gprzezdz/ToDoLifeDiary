@@ -17,11 +17,22 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     var currentDateDay: Long=0L
     var currentHomeButton:String="DAY"
     var todoItemList: LiveData<List<ToDoItem>> = itemDao.getToDoItemByDate(-1).asLiveData()
-  //  var todoCommentList: LiveData<List<ToDoComment>> = itemDao.getToDoItemComments(UUID.fromString("0000")).asLiveData()
 
 
-    fun getToDoItemTodayAndNotClosed(currentDateDay: Long): LiveData<List<ToDoItem>> {
-        return itemDao.getToDoItemTodayAndNotClosed(currentDateDay).asLiveData()
+    fun getDay(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getDay(currentDateDay).asLiveData()
+    }
+
+    fun getWeek(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getWeek(currentDateDay).asLiveData()
+    }
+
+    fun getMonth(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getMonth(currentDateDay).asLiveData()
+    }
+
+    fun getYear(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getYear(currentDateDay).asLiveData()
     }
 
     fun saveDateItem(todo: ToDoDate) {
@@ -39,14 +50,13 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     fun saveToDoItem(toDoItem: ToDoItem) {
         viewModelScope.launch { itemDao.insertToDoItem(toDoItem) }
     }
+
     fun saveToDoComment(toDoComment: ToDoComment) {
         viewModelScope.launch { itemDao.insertToDoItemComment(toDoComment) }
     }
+
     fun deleteToDoComment(toDoComment: ToDoComment) {
         viewModelScope.launch { itemDao.deleteToDoItemComment(toDoComment) }
-    }
-    fun loadDateList() :LiveData<List<ToDoDate>>{
-        return  itemDao.getDateItems().asLiveData()
     }
 
     fun loadToDoItems(time: Long):LiveData<List<ToDoItem>> {
@@ -77,7 +87,6 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
         viewModelScope.launch { itemDao.closeToDo(todoUuid,closeDateTime) }
     }
 
-
     class ToDoLifeViewModelFactory(private val itemDao: ToDoDAO) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             Log.d("ToDoLifeViewModel", "Init da ToDoLifeViewModelFactory")
@@ -89,5 +98,4 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
-
 }
