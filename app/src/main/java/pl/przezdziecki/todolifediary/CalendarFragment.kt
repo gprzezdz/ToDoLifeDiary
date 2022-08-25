@@ -42,7 +42,7 @@ class CalendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = ItemToDoListAdapter {
+        val adapter = ItemCalendarToDoListAdapter {
             Log.d("ToDoListFragment", "kliknął ${it.todo_uuid}")
             val action =
                 CalendarFragmentDirections.actionDateListFragmentToToDoDetailsFragment(it.todo_uuid)
@@ -88,7 +88,7 @@ class CalendarFragment : Fragment() {
             toDoLifeViewModel.todoItemList=toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
             toDoLifeViewModel.todoItemList.observe(this.viewLifecycleOwner) { items ->
                 items.let {
-                    (binding.recyclerViewDate.adapter as ItemToDoListAdapter).submitList(it)
+                    (binding.recyclerViewDate.adapter as ItemCalendarToDoListAdapter).submitList(it)
                 }
             }
         }

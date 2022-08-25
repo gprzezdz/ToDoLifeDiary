@@ -3,8 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="pl.przezdziecki.todolifediary.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_tags"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="Tags"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always|collapseActionView"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:title="Search"/>
 </menu>

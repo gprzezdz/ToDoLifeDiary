@@ -15,7 +15,7 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
 
 
     var currentDateDay: Long=0L
-
+    var currentHomeButton:String="DAY"
     var todoItemList: LiveData<List<ToDoItem>> = itemDao.getToDoItemByDate(-1).asLiveData()
   //  var todoCommentList: LiveData<List<ToDoComment>> = itemDao.getToDoItemComments(UUID.fromString("0000")).asLiveData()
 

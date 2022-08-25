@@ -15,6 +15,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.datetime.Clock
 import pl.przezdziecki.todolifediary.databinding.FragmentTodoEditBinding
 import pl.przezdziecki.todolifediary.db.ToDoItem
 import java.text.SimpleDateFormat
@@ -160,6 +161,12 @@ class ToDoEditFragment : Fragment() {
     private fun setButtonsDateTimeText(parStartDateTime: Long) {
         val sdfd = SimpleDateFormat("yyyy-MM-dd E", Locale.getDefault())
         val sdft = SimpleDateFormat("HH:mm", Locale.getDefault())
+        //if startdatetime different from curent time then buttonDate will be red.
+        binding.buttonDate.setBackgroundColor( resources.getColor(pl.przezdziecki.todolifediary.R.color.purple_500,null))
+        if(sdfd.format(parStartDateTime)!=sdfd.format(Clock.System.now().toEpochMilliseconds()))
+        {
+            binding.buttonDate.setBackgroundColor(  resources.getColor(pl.przezdziecki.todolifediary.R.color.red_700,null))
+        }
         binding.buttonDate.text = sdfd.format(parStartDateTime)
         binding.buttonTime.text = sdft.format(parStartDateTime)
         Log.d("AddToDoFragment", "setButtonsDateTimeText date ${binding.buttonDate.text}")
