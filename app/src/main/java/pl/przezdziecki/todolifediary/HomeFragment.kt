@@ -1,7 +1,6 @@
 package pl.przezdziecki.todolifediary
 
 import android.R
-import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
@@ -62,37 +61,31 @@ class HomeFragment : Fragment() {
         Log.d("HomeFragment", "onViewCreated")
         binding.recyclerViewDate.layoutManager = GridLayoutManager(this.context, 1)
         binding.recyclerViewDate.adapter = adapter
-        toDoLifeViewModel.todoItemList = toDoLifeViewModel.getToDoItemTodayAndNotClosed(currentDay)
-        toDoLifeViewModel.todoItemList.observe(this.viewLifecycleOwner) { items ->
-            items.let {
-                adapter.submitList(it)
-            }
-        }
-        binding.recyclerViewDate.setHasFixedSize(true)
+        loadListToDo("DAY")
         bindingButtonsAction()
     }
 
     private fun bindingButtonsAction() {
         binding.apply {
             buttonDay.setOnClickListener {
-                Log.d(TAG,"buttonDay click")
+                Log.d(TAG, "buttonDay click")
                 setDefaultButtonsStyle("DAY")
-                loadDayListToDo("DAY")
+                loadListToDo("DAY")
             }
             buttonWeek.setOnClickListener {
-                Log.d(TAG,"buttonWeek click")
+                Log.d(TAG, "buttonWeek click")
                 setDefaultButtonsStyle("WEEK")
-                loadDayListToDo("WEEK")
+                loadListToDo("WEEK")
             }
             buttonMonth.setOnClickListener {
-                Log.d(TAG,"buttonMonth click")
+                Log.d(TAG, "buttonMonth click")
                 setDefaultButtonsStyle("MONTH")
-                loadDayListToDo("MONTH")
+                loadListToDo("MONTH")
             }
             buttonYear.setOnClickListener {
-                Log.d(TAG,"buttonYear click")
+                Log.d(TAG, "buttonYear click")
                 setDefaultButtonsStyle("YEAR")
-                loadDayListToDo("YEAR")
+                loadListToDo("YEAR")
             }
         }
     }
@@ -101,58 +94,64 @@ class HomeFragment : Fragment() {
         binding.apply {
 
             buttonDay.setTypeface(buttonDay.typeface, Typeface.NORMAL)
-        buttonDay.setTextColor(resources.getColor( R.color.holo_blue_light,null))
+            buttonDay.setTextColor(resources.getColor(R.color.holo_blue_light, null))
 
             buttonWeek.setTypeface(buttonWeek.typeface, Typeface.NORMAL)
-            buttonWeek.setTextColor(resources.getColor( R.color.holo_blue_light,null))
+            buttonWeek.setTextColor(resources.getColor(R.color.holo_blue_light, null))
 
             buttonMonth.setTypeface(buttonMonth.typeface, Typeface.NORMAL)
-            buttonMonth.setTextColor(resources.getColor( R.color.holo_blue_light,null))
+            buttonMonth.setTextColor(resources.getColor(R.color.holo_blue_light, null))
 
             buttonYear.setTypeface(buttonYear.typeface, Typeface.NORMAL)
-            buttonYear.setTextColor(resources.getColor( R.color.holo_blue_light,null))
+            buttonYear.setTextColor(resources.getColor(R.color.holo_blue_light, null))
         }
     }
 
 
-    private fun loadDayListToDo(s: String) {
-        Log.d(TAG,"loadDayListToDo s ${s}")
-        when(s)
-        {
-            "DAY"->{
-                toDoLifeViewModel.currentHomeButton=s
+    private fun loadListToDo(s: String) {
+        Log.d(TAG, "loadDayListToDo s ${s}")
+        when (s) {
+            "DAY" -> {
+                toDoLifeViewModel.currentHomeButton = s
                 binding.apply {
-
                     buttonDay.setTypeface(buttonDay.typeface, Typeface.BOLD)
-                    buttonDay.setTextColor(resources.getColor( R.color.black,null))
+                    buttonDay.setTextColor(resources.getColor(R.color.black, null))
                 }
+                toDoLifeViewModel.todoItemList = toDoLifeViewModel.getDay(currentDay)
             }
-            "WEEK"->{
-                Log.d(TAG,"loadDayListToDo WEEK sel")
-                toDoLifeViewModel.currentHomeButton=s
+            "WEEK" -> {
+                Log.d(TAG, "loadDayListToDo WEEK sel")
+                toDoLifeViewModel.currentHomeButton = s
                 binding.apply {
-
                     buttonWeek.setTypeface(buttonWeek.typeface, Typeface.BOLD)
-                    buttonWeek.setTextColor(resources.getColor( R.color.black,null))
+                    buttonWeek.setTextColor(resources.getColor(R.color.black, null))
                 }
+                toDoLifeViewModel.todoItemList = toDoLifeViewModel.getWeek(currentDay)
             }
-            "MONTH"->{
-                toDoLifeViewModel.currentHomeButton=s
+            "MONTH" -> {
+                toDoLifeViewModel.currentHomeButton = s
                 binding.apply {
-
                     buttonMonth.setTypeface(buttonMonth.typeface, Typeface.BOLD)
-                    buttonMonth.setTextColor(resources.getColor( R.color.black,null))
+                    buttonMonth.setTextColor(resources.getColor(R.color.black, null))
                 }
+                toDoLifeViewModel.todoItemList = toDoLifeViewModel.getMonth(currentDay)
             }
-            "YEAR"->{
-                toDoLifeViewModel.currentHomeButton=s
+            "YEAR" -> {
+                toDoLifeViewModel.currentHomeButton = s
                 binding.apply {
 
                     buttonYear.setTypeface(buttonYear.typeface, Typeface.BOLD)
-                    buttonYear.setTextColor(resources.getColor( R.color.black,null))
+                    buttonYear.setTextColor(resources.getColor(R.color.black, null))
                 }
+                toDoLifeViewModel.todoItemList = toDoLifeViewModel.getYear(currentDay)
             }
         }
-    }
 
+        toDoLifeViewModel.todoItemList.observe(this.viewLifecycleOwner) { items ->
+            items.let {
+                (binding.recyclerViewDate.adapter as ItemHomeToDoListAdapter).submitList(it)
+            }
+        }
+        binding.recyclerViewDate.setHasFixedSize(true)
+    }
 }
