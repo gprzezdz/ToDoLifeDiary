@@ -1,11 +1,13 @@
 package pl.przezdziecki.todolifediary
 
+import android.R
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -90,8 +92,16 @@ class AddToDoFragment : Fragment() {
     }
 
     private fun setButtonsDateTimeText(parStartDateTime: Long) {
+
+
         val sdfd = SimpleDateFormat("yyyy-MM-dd E", Locale.getDefault())
         val sdft = SimpleDateFormat("HH:mm", Locale.getDefault())
+        //if startdatetime different from curent time then buttonDate will be red.
+        binding.buttonDate.setBackgroundColor( resources.getColor(pl.przezdziecki.todolifediary.R.color.purple_500,null))
+        if(sdfd.format(parStartDateTime)!=sdfd.format(Clock.System.now().toEpochMilliseconds()))
+        {
+            binding.buttonDate.setBackgroundColor(  resources.getColor(pl.przezdziecki.todolifediary.R.color.red_700,null))
+        }
         binding.buttonDate.text = sdfd.format(parStartDateTime)
         binding.buttonTime.text = sdft.format(parStartDateTime)
         Log.d("AddToDoFragment", "setButtonsDateTimeText date ${binding.buttonDate.text}")

@@ -50,7 +50,7 @@ class ItemCommentListAdapter (private val onItemClicked: (ToDoComment) -> Unit) 
     }
 
     override fun onBindViewHolder(holder: CommentListViewHolder, position: Int) {
-        Log.d("ItemToDoListAdapter", "item position: $position")
+        Log.d("ItemCalendarToDoListAdapter", "item position: $position")
         val current = getItem(position)
         holder.itemView.setOnClickListener {
             holder.itemView.setBackgroundColor(Color.LTGRAY)

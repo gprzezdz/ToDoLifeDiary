@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.datetime.Clock
 import pl.przezdziecki.todolifediary.databinding.FragmentCommentBinding
 import pl.przezdziecki.todolifediary.db.ToDoComment
 import java.text.SimpleDateFormat
@@ -115,6 +116,12 @@ class CommentFragment : Fragment() {
     private fun setButtonsDateTimeText(parStartDateTime: Long) {
         binding.buttonDate.text = toDoLifeViewModel.getFormattedDateE(parStartDateTime)
         binding.buttonTime.text = toDoLifeViewModel.getFormattedTime(parStartDateTime)
+        //if startdatetime different from curent time then buttonDate will be red.
+        binding.buttonDate.setBackgroundColor( resources.getColor(R.color.purple_500,null))
+        if(toDoLifeViewModel.getFormattedDateE(parStartDateTime)!=toDoLifeViewModel.getFormattedDateE(Clock.System.now().toEpochMilliseconds()))
+        {
+            binding.buttonDate.setBackgroundColor(  resources.getColor(R.color.red_700,null))
+        }
         Log.d("CommentFragment", "setButtonsDateTimeText date ${binding.buttonDate.text}")
         Log.d("CommentFragment", "setButtonsDateTimeText time ${binding.buttonTime.text}")
     }
@@ -148,8 +155,13 @@ class CommentFragment : Fragment() {
 
     private fun bind(todoComment: ToDoComment) {
         binding.apply {
-            buttonDate.text = toDoLifeViewModel.getFormattedDateE(todoComment.insertDateTime)
-            buttonTime.text = toDoLifeViewModel.getFormattedTime(todoComment.insertDateTime)
+            binding.buttonDate.setBackgroundColor( resources.getColor(R.color.purple_500,null))
+            if(toDoLifeViewModel.getFormattedDateE(todoComment.comDateTime)!=toDoLifeViewModel.getFormattedDateE(Clock.System.now().toEpochMilliseconds()))
+            {
+                binding.buttonDate.setBackgroundColor(  resources.getColor(R.color.red_700,null))
+            }
+            buttonDate.text = toDoLifeViewModel.getFormattedDateE(todoComment.comDateTime)
+            buttonTime.text = toDoLifeViewModel.getFormattedTime(todoComment.comDateTime)
             commentDescription.setText(todoComment.comment)
             commentCost.setText(todoComment.cost.toString())
         }
