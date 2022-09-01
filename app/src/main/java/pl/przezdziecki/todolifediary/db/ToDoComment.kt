@@ -1,11 +1,8 @@
 package pl.przezdziecki.todolifediary.db
 
 import androidx.annotation.NonNull
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
+import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import androidx.room.PrimaryKey
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,7 +14,8 @@ import java.util.*
         childColumns = ["todo_uuid"],
         parentColumns = ["todo_uuid"],
         onDelete = CASCADE
-    )]
+    )],
+    indices = [Index(value = ["todo_uuid"], unique = false)]
 )
 data class ToDoComment(
     @PrimaryKey
@@ -41,7 +39,7 @@ data class ToDoComment(
     var insertDateTime: Long,
     @NonNull
     @ColumnInfo(name = "file_type")
-    var fileType: String="",
+    var fileType: String = "",
 ) : Serializable
 
 fun ToDoComment.getFormattedDateTime(): String {

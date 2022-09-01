@@ -1,13 +1,11 @@
 package pl.przezdziecki.todolifediary
 
-import android.R
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.toColor
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -183,7 +181,7 @@ class AddToDoFragment : Fragment() {
         val sdf = SimpleDateFormat("yyyy-MM-dd")
         val mDate: Date = sdf.parse(today.toString()) as Date;
         todo.dateday = mDate.time
-        toDoLifeViewModel.saveDateItem(todo)
+        //toDoLifeViewModel.saveDateItem(todo)
         var toDoItem = ToDoItem(
             UUID.randomUUID(),
             todo.dateday,

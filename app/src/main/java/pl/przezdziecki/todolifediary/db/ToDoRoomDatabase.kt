@@ -28,8 +28,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
  * Database class with a singleton INSTANCE object.
  */
 @Database(
-    entities = [ToDoDate::class, ToDoItem::class, ToDoComment::class],
-    version = 6,
+    entities = [ ToDoItem::class, ToDoComment::class,Tag::class],
+    version = 8,
     exportSchema = false
 )
 abstract class ToDoRoomDatabase : RoomDatabase() {
@@ -55,6 +55,11 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
                         database.execSQL("update  todoitem_table set todo_type = 'DAY'")
                     }
                 }
+                val MIGRATION_6_8 = object : Migration(6,8) {
+                    override fun migrate(database: SupportSQLiteDatabase) {
+                        database.execSQL("drop table tododate_table")
+                    }
+                }
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     ToDoRoomDatabase::class.java,
@@ -62,6 +67,7 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
                 )
                     .addMigrations(MIGRATION_4_5)
                     .addMigrations(MIGRATION_5_6)
+                    .addMigrations(MIGRATION_6_8)
                     .fallbackToDestructiveMigration()
                     .build()
                 Log.d("ToDoRoomDatabase", "instancje null")

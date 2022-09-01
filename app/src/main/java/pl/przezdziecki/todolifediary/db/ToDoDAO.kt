@@ -9,8 +9,8 @@ import java.util.*
 @Dao
 interface ToDoDAO {
 
-    @Query("SELECT * from tododate_table ORDER BY dateday desc")
-    fun getDateItems(): Flow<List<ToDoDate>>
+    @Query("SELECT * from tag_table order by utag ")
+    fun getAllTags(): Flow<List<Tag>>
 
     @Query("SELECT * from todoitem_table WHERE dateday = :id order by start_date_time asc ")
     fun getToDoItemByDate(id: Long): Flow<List<ToDoItem>>
@@ -41,16 +41,13 @@ interface ToDoDAO {
     @Query("SELECT * from todocomment_table WHERE comment_uuid = :id ")
     fun getToDoItemComment(id: UUID):    Flow<ToDoComment>
 
-    // Specify the conflict strategy as IGNORE, when the user tries to add an
-    // existing Item into the database Room ignores the conflict.
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertDateItem(item: ToDoDate)
-
-    @Update
-    suspend fun updateDateItem(item: ToDoDate)
-
+    suspend fun insertTag(item: Tag)
     @Delete
-    suspend fun deleteDateItem(item: ToDoDate)
+    suspend fun deleteTag(item: Tag)
+
+
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToDoItem(item: ToDoItem)

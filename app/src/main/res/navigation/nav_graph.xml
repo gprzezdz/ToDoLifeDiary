@@ -122,5 +122,27 @@
         android:name="pl.przezdziecki.todolifediary.ContactsFragment"
         android:label="fragment_contacts"
         tools:layout="@layout/fragment_contacts" />
+    <fragment
+        android:id="@+id/tagsFragment"
+        android:name="pl.przezdziecki.todolifediary.tags.TagsFragment"
+        android:label="fragment_tags"
+        tools:layout="@layout/fragment_tags" >
+        <action
+            android:id="@+id/action_tagsFragment_to_tagEditFragment"
+            app:destination="@id/tagEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/tagEditFragment"
+        android:name="pl.przezdziecki.todolifediary.tags.TagEditFragment"
+        android:label="fragment_tag_edit"
+        tools:layout="@layout/fragment_tag_edit" >
+        <argument
+            android:name="tag"
+            app:argType="pl.przezdziecki.todolifediary.db.Tag" />
+        <argument
+            android:name="action_type"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
 
 </navigation>
