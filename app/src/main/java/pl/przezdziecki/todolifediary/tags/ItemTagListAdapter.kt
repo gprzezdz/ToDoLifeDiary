@@ -61,7 +61,7 @@ class ItemTagListAdapter (private val onItemClicked: (Tag) -> Unit) :
             }
 
             override fun areContentsTheSame(oldItem: Tag, newItem: Tag): Boolean {
-                return oldItem.tagUuid== newItem.tagUuid
+                return oldItem.uTag== newItem.uTag
             }
         }
     }

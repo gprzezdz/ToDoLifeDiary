@@ -21,6 +21,8 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
         return itemDao.getDay(currentDateDay).asLiveData()
     }
 
+
+
     fun getWeek(currentDateDay: Long): LiveData<List<ToDoItem>> {
         return itemDao.getWeek(currentDateDay).asLiveData()
     }
@@ -40,7 +42,9 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     fun deleteTag(tag: Tag) {
         viewModelScope.launch { itemDao.deleteTag(tag) }
     }
-
+    fun getToDoItemTags(todoUuid: UUID): LiveData<List<Tag>> {
+        return itemDao.getToDoItemTags(todoUuid).asLiveData()
+    }
     fun insertToDoItem(toDoItem: ToDoItem) {
         viewModelScope.launch { itemDao.insertToDoItem(toDoItem) }
     }
@@ -92,6 +96,15 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     fun loadTags(): LiveData<List<Tag>> {
         return itemDao.getAllTags().asLiveData()
     }
+
+    fun insertTag(tag: Tag) {
+        viewModelScope.launch { itemDao.insertTag(tag) }
+    }
+
+    fun insertToDoTagRel(rel: ToDoTagRel) {
+        viewModelScope.launch { itemDao.insertToDoTagRel(rel) }
+    }
+
     class ToDoLifeViewModelFactory(private val itemDao: ToDoDAO) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             Log.d("ToDoLifeViewModel", "Init da ToDoLifeViewModelFactory")

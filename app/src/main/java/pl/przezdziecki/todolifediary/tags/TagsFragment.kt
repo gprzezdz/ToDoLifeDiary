@@ -42,7 +42,7 @@ class TagsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonTagAdd.setOnClickListener {
-        val tag:Tag=Tag(UUID.randomUUID(),"","","", Clock.System.now().toEpochMilliseconds())
+        val tag:Tag=Tag("","","", Clock.System.now().toEpochMilliseconds())
 
             val action =
                 TagsFragmentDirections.actionTagsFragmentToTagEditFragment(tag,"ADD")

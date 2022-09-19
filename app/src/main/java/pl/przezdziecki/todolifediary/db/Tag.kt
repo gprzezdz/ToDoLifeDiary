@@ -10,21 +10,17 @@ import java.util.*
 
 @Entity(
     tableName = "tag_table",
-    indices = [Index(value = ["stag"], unique = true),Index(value = ["utag"], unique = true)]
+    indices = [Index(value = ["stag"], unique = true)]
 )
 data class Tag(
     @PrimaryKey
-    @ColumnInfo(name = "tag_uuid")
+    @ColumnInfo(name = "utag")
     @NonNull
-    var tagUuid: UUID,
+    var uTag: String ,
 
     @ColumnInfo(name = "stag")
     @NonNull
     var sTag: String ,
-
-    @ColumnInfo(name = "utag")
-    @NonNull
-    var uTag: String ,
 
     @ColumnInfo(name = "description")
     @NonNull

@@ -46,8 +46,11 @@ interface ToDoDAO {
     @Delete
     suspend fun deleteTag(item: Tag)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertToDoTagRel(item: ToDoTagRel)
 
-
+    @Query("SELECT * from tag_table WHERE utag in(select utag from todo_tag_rel where todo_uuid = :id) order by utag asc")
+    fun getToDoItemTags(id: UUID):  Flow<List<Tag>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToDoItem(item: ToDoItem)
@@ -64,5 +67,4 @@ interface ToDoDAO {
 
     @Query("UPDATE todoitem_table set close_date_time=:closeDateTime WHERE todo_uuid = :todoUuid")
     suspend fun closeToDo(todoUuid: UUID,closeDateTime:Long)
-
 }

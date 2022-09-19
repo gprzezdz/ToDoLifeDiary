@@ -21,15 +21,17 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.RoomOpenHelper
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import pl.przezdziecki.todolifediary.db.ToDoRoomDatabase.Companion.getDatabase
 
 /**
  * Database class with a singleton INSTANCE object.
  */
 @Database(
-    entities = [ ToDoItem::class, ToDoComment::class,Tag::class],
-    version = 9,
+    entities = [ToDoItem::class, ToDoComment::class, Tag::class,ToDoTagRel::class],
+    version = 10,
     exportSchema = false
 )
 abstract class ToDoRoomDatabase : RoomDatabase() {
@@ -41,12 +43,13 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
         private var INSTANCE: ToDoRoomDatabase? = null
 
         fun getDatabase(context: Context): ToDoRoomDatabase {
+
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
-                val MIGRATION_6_8 = object : Migration(6,8) {
+                val MIGRATION_9_10 = object : Migration( 9,10) {
                     override fun migrate(database: SupportSQLiteDatabase) {
-                        database.execSQL("drop table tododate_table")
+                        database.execSQL("drop table tag_table")
                     }
                 }
                 val instance = Room.databaseBuilder(
@@ -54,8 +57,8 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
                     ToDoRoomDatabase::class.java,
                     "todo_database"
                 )
-                  //  .addMigrations(MIGRATION_4_5)
-                //    .addMigrations(MIGRATION_5_6)
+                    //  .addMigrations(MIGRATION_4_5)
+             //       .addMigrations(MIGRATION_9_10)
                     .build()
                 Log.d("ToDoRoomDatabase", "instancje null")
                 INSTANCE = instance

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -58,22 +59,22 @@ class ToDoDetailsFragment : Fragment() {
 
         val adapter = ItemCommentListAdapter {
             Log.d(TAG, "kliknął ${it.commentUuid}")
-            if(it.fileType=="JPG")
-            {
-               val toDoPhotoEx = ToDoPhotoEx()
-                toDoPhotoEx.todoComment=it
+            if (it.fileType == "JPG") {
+                val toDoPhotoEx = ToDoPhotoEx()
+                toDoPhotoEx.todoComment = it
                 val date =
                     SimpleDateFormat("yyyy-MM-dd").format(Date(it.insertDateTime))
-                val imageDirectory  = binding.root.context.getExternalFilesDir("Photos").toString() + "/"+date+"/"+it.commentUuid.toString() +".jpg"
-                Log.d(TAG,"imageDirectoryURI: ${Uri.parse(imageDirectory)}")
-                toDoPhotoEx.photoUriString= Uri.parse(imageDirectory).toString()
+                val imageDirectory = binding.root.context.getExternalFilesDir("Photos")
+                    .toString() + "/" + date + "/" + it.commentUuid.toString() + ".jpg"
+                Log.d(TAG, "imageDirectoryURI: ${Uri.parse(imageDirectory)}")
+                toDoPhotoEx.photoUriString = Uri.parse(imageDirectory).toString()
                 val action =
                     ToDoDetailsFragmentDirections.actionToDoDetailsFragmentToCommentPhotoFragment(
                         toDoPhotoEx,
                         "EDITPHOTO"
                     )
                 this.findNavController().navigate(action)
-            }else {
+            } else {
                 val action =
                     ToDoDetailsFragmentDirections.actionToDoDetailsFragmentToCommentFragment(
                         it,
@@ -245,7 +246,7 @@ class ToDoDetailsFragment : Fragment() {
             SimpleDateFormat("yyyy-MM-dd").format(Date(todophoto.todoComment!!.insertDateTime))
         val imageDirectory = context!!.getExternalFilesDir("Photos")
 
-        val f=File("${imageDirectory}/${date}")
+        val f = File("${imageDirectory}/${date}")
         f.mkdirs()
         Log.i(TAG, "imagedirectory ${imageDirectory}")
         return createFile(Path("${imageDirectory}/${date}/${todophoto.todoComment!!.commentUuid.toString()}.jpg"))
@@ -276,15 +277,38 @@ class ToDoDetailsFragment : Fragment() {
     private fun bind(toDoItem: ToDoItem) {
         binding.apply {
             if (toDoItem.closeDateTime > 0L) {
-                todofulldate.text = toDoItem.todoType+ ": "+
-                    toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime) + "<--->" + toDoLifeViewModel.getFormattedDateTimeE(
-                        toDoItem.closeDateTime
-                    )
+                todofulldate.text = toDoItem.todoType + ": " +
+                        toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime) + "<--->" + toDoLifeViewModel.getFormattedDateTimeE(
+                    toDoItem.closeDateTime
+                )
             } else {
-                todofulldate.text =  toDoItem.todoType+ ": "+ toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime)
+                todofulldate.text =
+                    toDoItem.todoType + ": " + toDoLifeViewModel.getFormattedDateTimeE(toDoItem.startDateTime)
             }
+
             title.text = toDoItem.title
-            description.text = toDoItem.description
+            var stags: String = ""
+
+            toDoLifeViewModel.getToDoItemTags(toDoItem.todo_uuid).observeForever { items ->
+                items.let {
+                    it.forEach {
+                        Log.d(TAG,"Tag list: ${it.sTag}" )
+                        if (stags.isEmpty()) {
+                            stags = stags.plus(it.sTag)
+                        } else {
+                            stags = stags.plus(" ").plus(it.sTag)
+                        }
+                    }
+                }
+                Log.d(TAG,"stags ${stags}" )
+                if(stags.isEmpty()) {
+                    description.text = toDoItem.description
+                }else
+                {
+                    description.text = toDoItem.description+ "\n" +stags
+                }
+            }
+
         }
         if (toDoItem.closeDateTime > 0) {
             binding.buttonClose.text = "Reopen"
