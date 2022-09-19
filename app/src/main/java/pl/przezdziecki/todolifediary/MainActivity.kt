@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         when (item.itemId) {
             R.id.action_tags -> {
-                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.contactsFragment)
+                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.tagsFragment)
                 true
             }
         }

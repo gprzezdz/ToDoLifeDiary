@@ -115,4 +115,7 @@
     <string name="week">Week</string>
     <string name="month">Month</string>
     <string name="year">Year</string>
+    <string name="comment">Comment</string>
+    <string name="tag_name">Tag name</string>
+    <string name="add_tag">Add tag</string>
 </resources>

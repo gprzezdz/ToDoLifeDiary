@@ -52,7 +52,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = ItemHomeToDoListAdapter {
-            Log.d("HomeFragment", "kliknął ${it.todo_uuid}")
+            Log.d(TAG, "kliknął ${it.todo_uuid}")
             val action =
                 HomeFragmentDirections.actionHomeFragmentToToDoDetailsFragment(it.todo_uuid)
             this.findNavController().navigate(action)

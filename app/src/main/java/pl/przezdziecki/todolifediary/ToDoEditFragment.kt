@@ -4,23 +4,31 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.content.ContextCompat
+import androidx.core.view.forEach
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.chip.Chip
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.datetime.Clock
 import pl.przezdziecki.todolifediary.databinding.FragmentTodoEditBinding
+import pl.przezdziecki.todolifediary.db.Tag
 import pl.przezdziecki.todolifediary.db.ToDoItem
+import pl.przezdziecki.todolifediary.db.ToDoTagRel
 import java.text.SimpleDateFormat
 import java.util.*
 
+private var TAG:String ="ToDoEditFragment"
 class ToDoEditFragment : Fragment() {
 
     private var _binding: FragmentTodoEditBinding? = null
@@ -47,6 +55,39 @@ class ToDoEditFragment : Fragment() {
     }
 
 
+    private fun changeBinding() {
+        binding.apply {
+            tagInput.setOnKeyListener { view, i, keyEvent ->
+                Log.d(TAG, "tagInput.setOnKeyListener: ")
+                if (i == KeyEvent.KEYCODE_SPACE && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                    Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_SPACE")
+                    val chip = Chip(context)
+                    chip.text = (view as EditText).text
+                    chip.chipIcon = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_launcher_background
+                    )
+                    chip.isChipIconVisible = false
+                    chip.isCloseIconVisible = true
+                    chip.isClickable = true
+                    chip.isCheckable = false
+                    chipGroup.addView(chip as View)
+                    chip.setOnCloseIconClickListener { chipGroup.removeView(chip as View) }
+                    tagInput.setText("")
+                    return@setOnKeyListener true
+                }
+                if (i == KeyEvent.KEYCODE_DEL
+                    && tagInput.text.toString().isEmpty()
+                    &&  keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                    && chipGroup.childCount>0) {
+                    Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_BACK")
+                    chipGroup.removeViewAt(chipGroup.childCount-1)
+                    return@setOnKeyListener true
+                }
+                return@setOnKeyListener false
+            }
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("ToDoEditFragment", "onViewCreated")
@@ -61,6 +102,26 @@ class ToDoEditFragment : Fragment() {
                     bind(itemToDo)
                 }
             }
+
+        toDoLifeViewModel.getToDoItemTags(navigationArgs.todoUuid)
+            .observe(this.viewLifecycleOwner){
+                it.forEach {
+                    Log.d(TAG,"it.forEach {${it.sTag}")
+                    val chip = Chip(context)
+                    chip.text =it.sTag
+                    chip.chipIcon = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_launcher_background
+                    )
+                    chip.isChipIconVisible = false
+                    chip.isCloseIconVisible = true
+                    chip.isClickable = true
+                    chip.isCheckable = false
+                    binding.chipGroup.addView(chip as View)
+                    chip.setOnCloseIconClickListener { binding.chipGroup.removeView(chip as View) }
+                }
+            }
+
         binding.buttonTodoType.setOnClickListener {
             toDoTypeDialog()
         }
@@ -96,6 +157,7 @@ class ToDoEditFragment : Fragment() {
         binding.buttonCancelTodo.setOnClickListener {
             findNavController().navigateUp()
         }
+        changeBinding()
     }
 
     private fun toDoTypeDialog() {
@@ -119,6 +181,7 @@ class ToDoEditFragment : Fragment() {
             setButtonsDateTimeText(toDoItem.startDateTime)
             setToDoType(toDoItem)
         }
+
     }
 
     private fun setToDoType(toDoItem: ToDoItem) {
@@ -145,6 +208,20 @@ class ToDoEditFragment : Fragment() {
         itemToDo.description = binding.todoDescription.text.toString()
         itemToDo.todoType = binding.buttonTodoType.text.toString().uppercase()
         toDoLifeViewModel.saveToDoItem(itemToDo)
+        binding.chipGroup.forEach {
+            val chip = it as Chip
+            var tag = Tag(
+                chip.text.toString().uppercase(),
+                chip.text.toString(),
+                "",
+                Clock.System.now().toEpochMilliseconds()
+            )
+            toDoLifeViewModel.insertTag(tag)
+            var rel =
+                ToDoTagRel(itemToDo.todo_uuid, tag.uTag, Clock.System.now().toEpochMilliseconds())
+            toDoLifeViewModel.insertToDoTagRel(rel)
+            Log.d(TAG, "chip.text: ${chip.text}")
+        }
     }
 
     private fun deleteToDo() {

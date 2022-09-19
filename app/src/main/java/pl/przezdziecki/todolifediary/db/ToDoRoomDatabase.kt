@@ -21,15 +21,17 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.RoomOpenHelper
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import pl.przezdziecki.todolifediary.db.ToDoRoomDatabase.Companion.getDatabase
 
 /**
  * Database class with a singleton INSTANCE object.
  */
 @Database(
-    entities = [ToDoDate::class, ToDoItem::class, ToDoComment::class],
-    version = 6,
+    entities = [ToDoItem::class, ToDoComment::class, Tag::class,ToDoTagRel::class],
+    version = 10,
     exportSchema = false
 )
 abstract class ToDoRoomDatabase : RoomDatabase() {
@@ -41,18 +43,13 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
         private var INSTANCE: ToDoRoomDatabase? = null
 
         fun getDatabase(context: Context): ToDoRoomDatabase {
+
             // if the INSTANCE is not null, then return it,
             // if it is, then create the database
             return INSTANCE ?: synchronized(this) {
-                val MIGRATION_4_5 = object : Migration(4, 5) {
+                val MIGRATION_9_10 = object : Migration( 9,10) {
                     override fun migrate(database: SupportSQLiteDatabase) {
-                        database.execSQL("alter table todocomment_table add column file_type text not null default ''")
-                    }
-                }
-                val MIGRATION_5_6 = object : Migration(5, 6) {
-                    override fun migrate(database: SupportSQLiteDatabase) {
-                        database.execSQL("alter table todoitem_table add column todo_type text not null default 'DAY'")
-                        database.execSQL("update  todoitem_table set todo_type = 'DAY'")
+                        database.execSQL("drop table tag_table")
                     }
                 }
                 val instance = Room.databaseBuilder(
@@ -60,9 +57,8 @@ abstract class ToDoRoomDatabase : RoomDatabase() {
                     ToDoRoomDatabase::class.java,
                     "todo_database"
                 )
-                    .addMigrations(MIGRATION_4_5)
-                    .addMigrations(MIGRATION_5_6)
-                    .fallbackToDestructiveMigration()
+                    //  .addMigrations(MIGRATION_4_5)
+             //       .addMigrations(MIGRATION_9_10)
                     .build()
                 Log.d("ToDoRoomDatabase", "instancje null")
                 INSTANCE = instance
