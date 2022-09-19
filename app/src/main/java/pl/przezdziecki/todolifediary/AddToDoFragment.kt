@@ -1,29 +1,42 @@
 package pl.przezdziecki.todolifediary
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import androidx.core.content.ContextCompat
+import androidx.core.view.allViews
+import androidx.core.view.forEach
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.datetime.*
 import kotlinx.datetime.TimeZone
 import pl.przezdziecki.todolifediary.databinding.FragmentAddTodoBinding
+import pl.przezdziecki.todolifediary.db.Tag
 import pl.przezdziecki.todolifediary.db.ToDoDate
 import pl.przezdziecki.todolifediary.db.ToDoItem
+import pl.przezdziecki.todolifediary.db.ToDoTagRel
 import java.text.SimpleDateFormat
 import java.time.format.TextStyle
 import java.util.*
 
-
+private var TAG: String = "AddToDoFragment"
 
 class AddToDoFragment : Fragment() {
+    private lateinit var toDoItem: ToDoItem
     private val navigationArgs: AddToDoFragmentArgs by navArgs()
     private var _binding: FragmentAddTodoBinding? = null
     private val binding get() = _binding!!
@@ -33,10 +46,6 @@ class AddToDoFragment : Fragment() {
         ToDoLifeViewModel.ToDoLifeViewModelFactory(
             (activity?.application as ToDoLiveDiaryApplication).database.itemDao()
         )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -61,13 +70,32 @@ class AddToDoFragment : Fragment() {
         binding.buttonTime.setOnClickListener {
             showTimePicker()
         }
-        binding.buttonCancellTodo.setOnClickListener{
+        binding.buttonCancellTodo.setOnClickListener {
             findNavController().navigateUp()
         }
+        Log.d("AddToDoFragment", "startDateTime  ${startDateTime}")
         if (startDateTime == 0.toLong()) {
             startDateTime = Clock.System.now().toEpochMilliseconds()
         }
         setButtonsDateTimeText(startDateTime)
+        binding.buttonTodoType.setOnClickListener {
+            toDoTypeDialog()
+        }
+        changeBinding()
+    }
+
+    private fun toDoTypeDialog() {
+        val types = arrayOf("Year", "Month", "Week", "Day")
+        val ii = types.indexOf(binding.buttonTodoType.text)
+
+        val m = MaterialAlertDialogBuilder(context!!)
+            .setTitle("Chose type")
+            .setSingleChoiceItems(types, ii, DialogInterface.OnClickListener { dialogInterface, i ->
+                binding.buttonTodoType.text = types[i]
+                dialogInterface.dismiss()
+            })
+            .create()
+        m.show()
     }
 
     private fun stringToLocalDateTime(parString: String): Long {
@@ -77,8 +105,28 @@ class AddToDoFragment : Fragment() {
     }
 
     private fun setButtonsDateTimeText(parStartDateTime: Long) {
+
+
         val sdfd = SimpleDateFormat("yyyy-MM-dd E", Locale.getDefault())
         val sdft = SimpleDateFormat("HH:mm", Locale.getDefault())
+        //if startdatetime different from curent time then buttonDate will be red.
+        binding.buttonDate.setBackgroundColor(
+            resources.getColor(
+                pl.przezdziecki.todolifediary.R.color.purple_500,
+                null
+            )
+        )
+        if (sdfd.format(parStartDateTime) != sdfd.format(
+                Clock.System.now().toEpochMilliseconds()
+            )
+        ) {
+            binding.buttonDate.setBackgroundColor(
+                resources.getColor(
+                    pl.przezdziecki.todolifediary.R.color.red_700,
+                    null
+                )
+            )
+        }
         binding.buttonDate.text = sdfd.format(parStartDateTime)
         binding.buttonTime.text = sdft.format(parStartDateTime)
         Log.d("AddToDoFragment", "setButtonsDateTimeText date ${binding.buttonDate.text}")
@@ -107,13 +155,31 @@ class AddToDoFragment : Fragment() {
         }
     }
 
+    private fun LocalDateTimeToUTC(par: Long): Long {
+        return Instant.fromEpochMilliseconds(par).toLocalDateTime(TimeZone.currentSystemDefault())
+            .toInstant(TimeZone.UTC).toEpochMilliseconds()
+    }
+
 
     private fun showDatePicker() {
+        Log.d("AddToDoFragment", "clock:" + Clock.System.now().toString())
+        Log.d(
+            "AddToDoFragment",
+            " showDatePicker startDateTime  ${startDateTime} : " + toDoLifeViewModel.getFormattedDateE(
+                startDateTime
+            )
+        )
+        Log.d(
+            "AddToDoFragment",
+            " showDatePicker startDateTime  ${LocalDateTimeToUTC(startDateTime)} : " + toDoLifeViewModel.getFormattedDateE(
+                LocalDateTimeToUTC(startDateTime)
+            )
+        )
+
         val datePicker: MaterialDatePicker<Long> = MaterialDatePicker
             .Builder
             .datePicker()
-            .setSelection(startDateTime)
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .setSelection(LocalDateTimeToUTC(startDateTime))
             .setTitleText("Date to do")
             .build()
         datePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
@@ -125,10 +191,45 @@ class AddToDoFragment : Fragment() {
             startDateTime = stringToLocalDateTime(date + " " + binding.buttonTime.text)
             setButtonsDateTimeText(startDateTime)
         }
+    }
 
+    private fun changeBinding() {
+        binding.apply {
+            tagInput.setOnKeyListener { view, i, keyEvent ->
+                Log.d(TAG, "tagInput.setOnKeyListener: ")
+                if (i == KeyEvent.KEYCODE_SPACE && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+                    Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_SPACE")
+                    val chip = Chip(context)
+                    chip.text = (view as EditText).text
+                    chip.chipIcon = ContextCompat.getDrawable(
+                        requireContext(),
+                        R.drawable.ic_launcher_background
+                    )
+                    chip.isChipIconVisible = false
+                    chip.isCloseIconVisible = true
+                    chip.isClickable = true
+                    chip.isCheckable = false
+                    chipGroup.addView(chip as View)
+                    chip.setOnCloseIconClickListener { chipGroup.removeView(chip as View) }
+                    tagInput.setText("")
+                    return@setOnKeyListener true
+                }
+                if (i == KeyEvent.KEYCODE_DEL
+                    && tagInput.text.toString().isEmpty()
+                    &&  keyEvent.getAction() == KeyEvent.ACTION_DOWN
+                    && chipGroup.childCount>0) {
+                    Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_BACK")
+                    chipGroup.removeViewAt(chipGroup.childCount-1)
+                    return@setOnKeyListener true
+                }
+                return@setOnKeyListener false
+            }
+        }
     }
 
     private fun saveToDo() {
+        startDateTime =
+            stringToLocalDateTime(binding.buttonDate.text.toString() + " " + binding.buttonTime.text)
         Log.d("AddToDoFragment", "binding.todoName.text: ${binding.todoTitle.text}")
         val now: Instant = Instant.fromEpochMilliseconds(startDateTime)
         val today: LocalDate = now.toLocalDateTime(TimeZone.currentSystemDefault()).date
@@ -140,18 +241,36 @@ class AddToDoFragment : Fragment() {
         val sdf = SimpleDateFormat("yyyy-MM-dd")
         val mDate: Date = sdf.parse(today.toString()) as Date;
         todo.dateday = mDate.time
-        toDoLifeViewModel.saveDateItem(todo)
-        var toDoItem = ToDoItem(
+
+        toDoItem = ToDoItem(
             UUID.randomUUID(),
             todo.dateday,
             binding.todoTitle.text.toString(),
             binding.todoDescription.text.toString(),
             startDateTime,
             0,
-            Clock.System.now().toEpochMilliseconds()
+            Clock.System.now().toEpochMilliseconds(),
+            binding.buttonTodoType.text.toString().uppercase()
         )
         toDoLifeViewModel.insertToDoItem(toDoItem)
-        val action = AddToDoFragmentDirections.actionAddToDoFragmentToToDoListFragment(todo.dateday)
+
+        binding.chipGroup.forEach {
+            val chip = it as Chip
+            var tag = Tag(
+                chip.text.toString().uppercase(),
+                chip.text.toString(),
+                "",
+                Clock.System.now().toEpochMilliseconds()
+            )
+            toDoLifeViewModel.insertTag(tag)
+            var rel =
+                ToDoTagRel(toDoItem.todo_uuid, tag.uTag, Clock.System.now().toEpochMilliseconds())
+            toDoLifeViewModel.insertToDoTagRel(rel)
+            Log.d(TAG, "chip.text: ${chip.text}")
+        }
+
+        val action =
+            AddToDoFragmentDirections.actionAddToDoFragmentToToDoDetailsFragment(toDoItem.todo_uuid)
         this.findNavController().navigate(action)
     }
 }

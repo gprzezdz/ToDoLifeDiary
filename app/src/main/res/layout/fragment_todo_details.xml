@@ -74,7 +74,9 @@
         android:id="@+id/button_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:text="Edit"
+        app:layout_constraintBottom_toTopOf="@+id/textViewtext"
         app:layout_constraintEnd_toStartOf="@+id/button_add_comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider4" />
@@ -83,20 +85,37 @@
         android:id="@+id/button_add_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="Add comment"
-        app:layout_constraintEnd_toStartOf="@+id/button_close"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="20dp"
+        android:text="Comment+"
+        app:layout_constraintBottom_toTopOf="@+id/divider7"
+        app:layout_constraintEnd_toStartOf="@+id/button_add_photo"
         app:layout_constraintStart_toEndOf="@id/button_edit"
+        app:layout_constraintTop_toBottomOf="@id/divider4" />
+
+    <Button
+        android:id="@+id/button_add_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="20dp"
+        android:text="Photo+"
+        app:layout_constraintBottom_toTopOf="@+id/divider7"
+        app:layout_constraintEnd_toStartOf="@+id/button_close"
+        app:layout_constraintStart_toEndOf="@+id/button_add_comment"
         app:layout_constraintTop_toBottomOf="@id/divider4" />
 
     <Button
         android:id="@+id/button_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="20dp"
         android:text="Close"
+        app:layout_constraintBottom_toTopOf="@+id/divider7"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/button_add_comment"
+        app:layout_constraintStart_toEndOf="@id/button_add_photo"
         app:layout_constraintTop_toBottomOf="@id/divider4" />
 
     <TextView
@@ -135,6 +154,7 @@
         android:layout_marginEnd="@dimen/margin_between_elements"
         android:layout_marginBottom="@dimen/margin_between_elements"
         android:contentDescription="@string/add_new_item"
+
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

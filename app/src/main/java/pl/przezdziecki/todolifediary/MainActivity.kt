@@ -1,7 +1,7 @@
 package pl.przezdziecki.todolifediary
 
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -9,7 +9,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import pl.przezdziecki.todolifediary.databinding.ActivityMainBinding
+import java.io.File
+
+private var TAG: String = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,12 +26,34 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         setSupportActionBar(binding.toolbar)
-
-    //    val navController = findNavController(R.id.nav_host_fragment_content_main)
-     //   appBarConfiguration = AppBarConfiguration(navController.graph)
-       // setupActionBarWithNavController(navController, appBarConfiguration)
+        val navView: BottomNavigationView = binding.bottomNavigation
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
+        navView.setupWithNavController(navController)
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            Log.d(TAG, "binding Bottom menu click: " + item.toString())
+            when (item.itemId) {
+                R.id.homeFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.homeFragment)
+                    true
+                }
+                R.id.calendarFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.calendarFragment)
+                    true
+                }
+                R.id.wikiFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.wikiFragment)
+                    true
+                }
+                R.id.contactsFragment -> {
+                    findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.contactsFragment)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -39,10 +66,13 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        when (item.itemId) {
+            R.id.action_tags -> {
+                findNavController(R.id.nav_host_fragment_content_main).navigate(R.id.tagsFragment)
+                true
+            }
         }
+        return (super.onOptionsItemSelected(item));
     }
 
     override fun onSupportNavigateUp(): Boolean {

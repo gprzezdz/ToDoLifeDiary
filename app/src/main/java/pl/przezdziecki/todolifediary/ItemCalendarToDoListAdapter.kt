@@ -8,14 +8,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import pl.przezdziecki.todolifediary.databinding.ItemTodoListBinding
+import pl.przezdziecki.todolifediary.databinding.ItemCalendarTodoListBinding
 import pl.przezdziecki.todolifediary.db.ToDoItem
 import pl.przezdziecki.todolifediary.db.getFormattedTime
 
-class ItemToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
-    ListAdapter<ToDoItem, ItemToDoListAdapter.ToDoListViewHolder>(DiffCallback) {
+class ItemCalendarToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
+    ListAdapter<ToDoItem, ItemCalendarToDoListAdapter.ToDoListViewHolder>(DiffCallback) {
 
-    class ToDoListViewHolder(private var binding: ItemTodoListBinding) :
+    class ToDoListViewHolder(private var binding: ItemCalendarTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ToDoItem) {
             binding.todoStartTime.text = item.getFormattedTime() +" " +item.title
@@ -25,7 +25,7 @@ class ItemToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoListViewHolder {
         return ToDoListViewHolder(
-            ItemTodoListBinding.inflate(
+            ItemCalendarTodoListBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 )
@@ -34,8 +34,15 @@ class ItemToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: ToDoListViewHolder, position: Int) {
-        Log.d("ItemToDoListAdapter", "item position: $position")
+        Log.d("ItemCalendarToDoListAdapter", "item position: $position")
         val current = getItem(position)
+        if(current.closeDateTime>0L)
+        {
+            holder.itemView.setBackgroundResource(R.color.light_green)
+        }else
+        {
+            holder.itemView.setBackgroundColor(Color.WHITE)
+        }
         holder.itemView.setOnClickListener {
             holder.itemView.setBackgroundColor(Color.LTGRAY)
             object : CountDownTimer(200, 200) {

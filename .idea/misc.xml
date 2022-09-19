@@ -4,21 +4,38 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.17395833333333333" />
-        <entry key="app/src/main/res/layout/activity_main.xml" value="0.3530961791831357" />
-        <entry key="app/src/main/res/layout/content_main.xml" value="0.366120218579235" />
-        <entry key="app/src/main/res/layout/fragment_add_todo.xml" value="0.29891304347826086" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/content_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_add_todo.xml" value="0.42916666666666664" />
+        <entry key="app/src/main/res/layout/fragment_calendar.xml" value="0.17798913043478262" />
         <entry key="app/src/main/res/layout/fragment_comment.xml" value="0.536" />
+        <entry key="app/src/main/res/layout/fragment_comment_photo.xml" value="0.45677083333333335" />
+        <entry key="app/src/main/res/layout/fragment_contacts.xml" value="0.134375" />
         <entry key="app/src/main/res/layout/fragment_date_list.xml" value="0.3776041666666667" />
         <entry key="app/src/main/res/layout/fragment_first.xml" value="0.7932291666666667" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.176" />
         <entry key="app/src/main/res/layout/fragment_item_comment_list_list.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_second.xml" value="0.44375" />
+        <entry key="app/src/main/res/layout/fragment_tag_add.xml" value="0.434375" />
+        <entry key="app/src/main/res/layout/fragment_tag_edit.xml" value="0.27239583333333334" />
+        <entry key="app/src/main/res/layout/fragment_tags.xml" value="0.4479166666666667" />
+        <entry key="app/src/main/res/layout/fragment_tags_list.xml" value="0.5130208333333334" />
         <entry key="app/src/main/res/layout/fragment_to_do_details.xml" value="0.13958333333333334" />
-        <entry key="app/src/main/res/layout/fragment_todo_details.xml" value="0.4890625" />
-        <entry key="app/src/main/res/layout/fragment_todo_edit.xml" value="0.44375" />
+        <entry key="app/src/main/res/layout/fragment_todo_details.xml" value="0.3027040560841262" />
+        <entry key="app/src/main/res/layout/fragment_todo_edit.xml" value="0.42916666666666664" />
         <entry key="app/src/main/res/layout/fragment_todo_list.xml" value="0.12460063897763578" />
-        <entry key="app/src/main/res/layout/item_comment_list.xml" value="0.264" />
+        <entry key="app/src/main/res/layout/fragment_wiki.xml" value="0.536" />
+        <entry key="app/src/main/res/layout/item_calendar_todo_list.xml" value="0.4479166666666667" />
+        <entry key="app/src/main/res/layout/item_comment_list.xml" value="0.45677083333333335" />
         <entry key="app/src/main/res/layout/item_date_list.xml" value="0.3836050724637681" />
+        <entry key="app/src/main/res/layout/item_home_todo_list.xml" value="0.13858695652173914" />
+        <entry key="app/src/main/res/layout/item_tag_list.xml" value="0.38177083333333334" />
         <entry key="app/src/main/res/layout/item_todo_list.xml" value="0.4" />
+        <entry key="app/src/main/res/layout/test.xml" value="0.506508875739645" />
+        <entry key="app/src/main/res/menu/bottom_navigation_menu.xml" value="0.14270833333333333" />
+        <entry key="app/src/main/res/menu/menu_main.xml" value="0.14375" />
+        <entry key="app/src/main/res/xml/file_paths.xml" value="0.3803204807210816" />
+        <entry key="app/src/main/res/xml/standalone_chip.xml" value="0.44375" />
       </map>
     </option>
   </component>

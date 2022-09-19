@@ -4,23 +4,47 @@ package pl.przezdziecki.todolifediary
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import pl.przezdziecki.todolifediary.db.ToDoComment
-import pl.przezdziecki.todolifediary.db.ToDoDAO
-import pl.przezdziecki.todolifediary.db.ToDoDate
-import pl.przezdziecki.todolifediary.db.ToDoItem
+import pl.przezdziecki.todolifediary.db.*
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
 
 
+    var currentDateDay: Long = 0L
+    var currentHomeButton: String = "DAY"
     var todoItemList: LiveData<List<ToDoItem>> = itemDao.getToDoItemByDate(-1).asLiveData()
-  //  var todoCommentList: LiveData<List<ToDoComment>> = itemDao.getToDoItemComments(UUID.fromString("0000")).asLiveData()
 
-    fun saveDateItem(todo: ToDoDate) {
-        viewModelScope.launch { itemDao.insertDateItem(todo) }
+    var tagList: LiveData<List<Tag>> = itemDao.getAllTags().asLiveData()
+
+    fun getDay(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getDay(currentDateDay).asLiveData()
     }
 
+
+
+    fun getWeek(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getWeek(currentDateDay).asLiveData()
+    }
+
+    fun getMonth(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getMonth(currentDateDay).asLiveData()
+    }
+
+    fun getYear(currentDateDay: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getYear(currentDateDay).asLiveData()
+    }
+
+    fun saveTag(tag: Tag) {
+        viewModelScope.launch { itemDao.insertTag(tag) }
+    }
+
+    fun deleteTag(tag: Tag) {
+        viewModelScope.launch { itemDao.deleteTag(tag) }
+    }
+    fun getToDoItemTags(todoUuid: UUID): LiveData<List<Tag>> {
+        return itemDao.getToDoItemTags(todoUuid).asLiveData()
+    }
     fun insertToDoItem(toDoItem: ToDoItem) {
         viewModelScope.launch { itemDao.insertToDoItem(toDoItem) }
     }
@@ -32,18 +56,17 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     fun saveToDoItem(toDoItem: ToDoItem) {
         viewModelScope.launch { itemDao.insertToDoItem(toDoItem) }
     }
+
     fun saveToDoComment(toDoComment: ToDoComment) {
         viewModelScope.launch { itemDao.insertToDoItemComment(toDoComment) }
     }
+
     fun deleteToDoComment(toDoComment: ToDoComment) {
         viewModelScope.launch { itemDao.deleteToDoItemComment(toDoComment) }
     }
-    fun loadDateList() :LiveData<List<ToDoDate>>{
-        return  itemDao.getDateItems().asLiveData()
-    }
 
-    fun loadToDoItems(time: Long) {
-        todoItemList = itemDao.getToDoItemByDate(time).asLiveData()
+    fun loadToDoItems(time: Long): LiveData<List<ToDoItem>> {
+        return itemDao.getToDoItemByDate(time).asLiveData()
     }
 
     fun getToDoItemComments(todoUuid: UUID): LiveData<List<ToDoComment>> {
@@ -66,10 +89,21 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
         return SimpleDateFormat("HH:mm", Locale.getDefault()).format(startDateTime)
     }
 
-    fun closeToDo(todoUuid: UUID,closeDateTime:Long) {
-        viewModelScope.launch { itemDao.closeToDo(todoUuid,closeDateTime) }
+    fun closeToDo(todoUuid: UUID, closeDateTime: Long) {
+        viewModelScope.launch { itemDao.closeToDo(todoUuid, closeDateTime) }
     }
 
+    fun loadTags(): LiveData<List<Tag>> {
+        return itemDao.getAllTags().asLiveData()
+    }
+
+    fun insertTag(tag: Tag) {
+        viewModelScope.launch { itemDao.insertTag(tag) }
+    }
+
+    fun insertToDoTagRel(rel: ToDoTagRel) {
+        viewModelScope.launch { itemDao.insertToDoTagRel(rel) }
+    }
 
     class ToDoLifeViewModelFactory(private val itemDao: ToDoDAO) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -82,5 +116,4 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
             throw IllegalArgumentException("Unknown ViewModel class")
         }
     }
-
 }
