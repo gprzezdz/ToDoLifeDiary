@@ -190,49 +190,55 @@ class AddToDoFragment : Fragment() {
         }
     }
 
+    private fun textWat(): TextWatcher {
+       val test:TextWatcher=object : TextWatcher {
+           override fun afterTextChanged(s: Editable?) {
+               Log.d(TAG, "cs.toString() afterTextChanged:")
+           }
+
+           override fun beforeTextChanged(
+               s: CharSequence?,
+               start: Int,
+               count: Int,
+               after: Int
+           ) {
+               Log.d(TAG, "cs.toString() beforeTextChanged:")
+           }
+
+           override fun onTextChanged(cs: CharSequence, start: Int, before: Int, count: Int) {
+               Log.d(TAG, "cs.toString() onTextChanged: ${cs.toString()} ")
+               if (cs.toString().trim().isEmpty()) {
+                   return
+               }
+               if (cs.isEmpty() || start >= cs.length || start < 0) {
+                   return
+               }
+               Log.d(TAG, "cs.toString(): ${cs.toString()} ")
+               if (cs.subSequence(start, start + 1).toString().equals(" ", true)) {
+                   Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_SPACE")
+                   val chip = Chip(context)
+                   chip.text = cs.toString().trim()
+                   chip.chipIcon = ContextCompat.getDrawable(
+                       requireContext(),
+                       R.drawable.ic_launcher_background
+                   )
+                   chip.isChipIconVisible = false
+                   chip.isCloseIconVisible = true
+                   chip.isClickable = true
+                   chip.isCheckable = false
+                  binding.chipGroup.addView(chip as View)
+                   chip.setOnCloseIconClickListener { binding.chipGroup.removeView(chip as View) }
+                   binding.tagInput.setText("")
+               }
+           }
+       }
+        return test
+    }
     private fun changeBinding() {
+
         binding.apply {
-            tagInput.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    Log.d(TAG, "cs.toString() afterTextChanged:")
-                }
-
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                    Log.d(TAG, "cs.toString() beforeTextChanged:")
-                }
-
-                override fun onTextChanged(cs: CharSequence, start: Int, before: Int, count: Int) {
-                    Log.d(TAG, "cs.toString() onTextChanged: ${cs.toString()} ")
-                    if (cs.toString().trim().isEmpty()) {
-                        return
-                    }
-                    if (cs.isEmpty() || start >= cs.length || start < 0) {
-                        return
-                    }
-                    Log.d(TAG, "cs.toString(): ${cs.toString()} ")
-                    if (cs.subSequence(start, start + 1).toString().equals(" ", true)) {
-                        Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_SPACE")
-                        val chip = Chip(context)
-                        chip.text = cs.toString().trim()
-                        chip.chipIcon = ContextCompat.getDrawable(
-                            requireContext(),
-                            R.drawable.ic_launcher_background
-                        )
-                        chip.isChipIconVisible = false
-                        chip.isCloseIconVisible = true
-                        chip.isClickable = true
-                        chip.isCheckable = false
-                        chipGroup.addView(chip as View)
-                        chip.setOnCloseIconClickListener { chipGroup.removeView(chip as View) }
-                        tagInput.setText("")
-                    }
-                }
-            })
+            tagInput.addTextChangedListener(textWat())
+            todoTitle.addTextChangedListener(textWat())
         }
     }
 
