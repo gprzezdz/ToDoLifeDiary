@@ -6,6 +6,16 @@
     android:layout_height="wrap_content"
     android:layout_gravity="start">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="@android:color/black"
+        app:layout_constraintBottom_toTopOf="@+id/todo_start_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/todo_start_time"
         android:layout_width="wrap_content"
@@ -14,7 +24,6 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="4dp"
         android:layout_marginBottom="4dp"
-
         android:gravity="left"
         android:text="12:34"
         android:textSize="20sp"
@@ -24,6 +33,5 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
