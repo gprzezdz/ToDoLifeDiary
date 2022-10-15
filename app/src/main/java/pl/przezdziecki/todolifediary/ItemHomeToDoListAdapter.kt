@@ -14,28 +14,44 @@ import kotlinx.datetime.LocalDate
 import kotlinx.datetime.toLocalDateTime
 import pl.przezdziecki.todolifediary.databinding.ItemHomeTodoListBinding
 import pl.przezdziecki.todolifediary.db.ToDoItem
+import pl.przezdziecki.todolifediary.db.getFormattedDateTime
 import pl.przezdziecki.todolifediary.db.getFormattedTime
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ItemHomeToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
+class ItemHomeToDoListAdapter(private val onItemClicked: (ToDoItem) -> Unit) :
     ListAdapter<ToDoItem, ItemHomeToDoListAdapter.HomeToDoListViewHolder>(DiffCallback) {
-    val mDate: Date
+    private val mDate: Date
+
     class HomeToDoListViewHolder(private var binding: ItemHomeTodoListBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(item: ToDoItem) {
-            binding.todoStartTime.text = item.getFormattedTime() +" " +item.title
+            if (!SimpleDateFormat("yyyy-MM-dd E", Locale.getDefault()).format(item.dateday).equals(
+                    SimpleDateFormat(
+                        "yyyy-MM-dd E",
+                        Locale.getDefault()
+                    ).format(Date().time)
+                )
+            ) {
+                binding.todoStartTime.text = item.getFormattedDateTime() + "\n" + item.title
+            } else {
+                binding.todoStartTime.text = item.getFormattedTime() + "\n" + item.title
+            }
         }
     }
+
     init {
         val now: Instant = Clock.System.now()
         val today: LocalDate =
             now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date
         val sdf = SimpleDateFormat("yyyy-MM-dd")
-         mDate  = sdf.parse(today.toString()) as Date;
+        mDate = sdf.parse(today.toString()) as Date;
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemHomeToDoListAdapter.HomeToDoListViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ItemHomeToDoListAdapter.HomeToDoListViewHolder {
         return HomeToDoListViewHolder(
             ItemHomeTodoListBinding.inflate(
                 LayoutInflater.from(
@@ -49,17 +65,19 @@ class ItemHomeToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
         Log.d("ItemHomeToDoListAdapter", "item position: $position")
         val current = getItem(position)
         holder.itemView.setBackgroundColor(Color.WHITE)
-        if(current.closeDateTime>0L)
-        {
+        if (current.closeDateTime > 0L) {
             holder.itemView.setBackgroundResource(R.color.light_green)
-        }
-        else if(current.closeDateTime==0L && current.dateday<mDate.time)
-        {
+        } else if (current.closeDateTime == 0L && current.dateday < mDate.time) {
             holder.itemView.setBackgroundColor(Color.RED)
-        }
-        else if(current.closeDateTime==0L && current.startDateTime<Clock.System.now().toEpochMilliseconds())
-        {
-            Log.d("ItemHomeToDoListAdapter","current.startDateTime ${current.startDateTime} Clock.System.now().toEpochMilliseconds(): ${Clock.System.now().toEpochMilliseconds()}")
+        } else if (current.closeDateTime == 0L && current.startDateTime < Clock.System.now()
+                .toEpochMilliseconds()
+        ) {
+            Log.d(
+                "ItemHomeToDoListAdapter",
+                "current.startDateTime ${current.startDateTime} Clock.System.now().toEpochMilliseconds(): ${
+                    Clock.System.now().toEpochMilliseconds()
+                }"
+            )
             holder.itemView.setBackgroundColor(Color.YELLOW)
         }
         holder.itemView.setOnClickListener {
@@ -67,6 +85,7 @@ class ItemHomeToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
             object : CountDownTimer(200, 200) {
                 override fun onTick(millisUntilFinished: Long) {
                 }
+
                 override fun onFinish() {
                     onItemClicked(current)
                 }
@@ -82,8 +101,8 @@ class ItemHomeToDoListAdapter (private val onItemClicked: (ToDoItem) -> Unit) :
             }
 
             override fun areContentsTheSame(oldItem: ToDoItem, newItem: ToDoItem): Boolean {
-                return oldItem.todo_uuid== newItem.todo_uuid
+                return oldItem.todo_uuid == newItem.todo_uuid
             }
         }
     }
-    }
+}
