@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
@@ -56,8 +57,12 @@ class ToDoEditFragment : Fragment() {
         return binding.root
     }
 
-    private fun textWat(): TextWatcher {
-        val test:TextWatcher=object : TextWatcher {
+    /**
+     * TODO add param checkRemoved if true the not add tag because was removed
+     * tag is always added when typed in tag input field
+     */
+    private fun textWat(split: Boolean): TextWatcher {
+        val test: TextWatcher = object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 Log.d(TAG, "cs.toString() afterTextChanged:")
             }
@@ -82,8 +87,39 @@ class ToDoEditFragment : Fragment() {
                 Log.d(TAG, "cs.toString(): ${cs.toString()} ")
                 if (cs.subSequence(start, start + 1).toString().equals(" ", true)) {
                     Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_SPACE")
+                    textToChip(cs.toString(), split)
+                    binding.tagInput.setText("")
+                }
+            }
+        }
+        return test
+    }
+
+    /**
+     * TODO add param checkRemoved if true the not add tag because was removed
+     * tag is always added when typed in tag input field
+     */
+    private fun textToChip(text: String, split: Boolean) {
+        if (!split) {
+            if (!isTag(text.trim())) {
+                val chip = Chip(context)
+                chip.text = text.trim()
+                chip.chipIcon = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_launcher_background
+                )
+                chip.isChipIconVisible = false
+                chip.isCloseIconVisible = true
+                chip.isClickable = true
+                chip.isCheckable = false
+                binding.chipGroup.addView(chip as View)
+                chip.setOnCloseIconClickListener { binding.chipGroup.removeView(chip as View) }
+            }
+        } else {
+            text.trim().split(" ").forEach {
+                if (!isTag(it.trim())) {
                     val chip = Chip(context)
-                    chip.text = cs.toString().trim()
+                    chip.text = it.trim()
                     chip.chipIcon = ContextCompat.getDrawable(
                         requireContext(),
                         R.drawable.ic_launcher_background
@@ -94,17 +130,43 @@ class ToDoEditFragment : Fragment() {
                     chip.isCheckable = false
                     binding.chipGroup.addView(chip as View)
                     chip.setOnCloseIconClickListener { binding.chipGroup.removeView(chip as View) }
-                    binding.tagInput.setText("")
                 }
             }
         }
+    }
+
+    private fun isTag(stag: String): Boolean {
+        var test: Boolean = false
+        binding.chipGroup.forEach {
+            val chip = it as Chip
+            if (chip.text.toString().uppercase() == stag.uppercase())
+                test = true
+        }
         return test
     }
+
     private fun changeBinding() {
         binding.apply {
-
-            tagInput.addTextChangedListener(textWat())
-            todoTitle.addTextChangedListener(textWat())
+            tagInput.setOnEditorActionListener { v, actionId, event ->
+                Log.d(TAG, "setOnEditorActionListener")
+                return@setOnEditorActionListener when (actionId) {
+                    EditorInfo.IME_ACTION_NEXT -> {
+                        Log.d(TAG, "setOnEditorActionListener enter")
+                        if (tagInput.text.toString().trim().isEmpty()) {
+                            todoDescription.requestFocus()
+                        }else{
+                            textToChip(tagInput.text.toString().trim(),false)
+                            tagInput.setText("")
+                        }
+                        true
+                    }
+                    else -> {
+                        Log.d(TAG, "setOnEditorActionListener nt enter")
+                        false
+                    }
+                }
+            }
+            todoTitle.addTextChangedListener(textWat(true))
         }
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -200,7 +262,6 @@ class ToDoEditFragment : Fragment() {
             setButtonsDateTimeText(toDoItem.startDateTime)
             setToDoType(toDoItem)
         }
-
     }
 
     private fun setToDoType(toDoItem: ToDoItem) {
@@ -223,8 +284,8 @@ class ToDoEditFragment : Fragment() {
 
     private fun updateToDo() {
         Log.d("ToDoEditFragment", "updateToDo")
-        itemToDo.title = binding.todoTitle.text.toString()
-        itemToDo.description = binding.todoDescription.text.toString()
+        itemToDo.title = binding.todoTitle.text.toString().trim()
+        itemToDo.description = binding.todoDescription.text.toString().trim()
         itemToDo.todoType = binding.buttonTodoType.text.toString().uppercase()
         toDoLifeViewModel.saveToDoItem(itemToDo)
         binding.chipGroup.forEach {
