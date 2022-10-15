@@ -2,22 +2,20 @@ package pl.przezdziecki.todolifediary
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.view.inputmethod.EditorInfo
 import androidx.core.content.ContextCompat
-import androidx.core.view.allViews
 import androidx.core.view.forEach
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.chip.Chip
-import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.timepicker.MaterialTimePicker
@@ -193,40 +191,115 @@ class AddToDoFragment : Fragment() {
         }
     }
 
-    private fun changeBinding() {
-        binding.apply {
-            tagInput.setOnKeyListener { view, i, keyEvent ->
-                Log.d(TAG, "tagInput.setOnKeyListener: ")
-                if (i == KeyEvent.KEYCODE_SPACE && keyEvent.getAction() == KeyEvent.ACTION_DOWN) {
+    /**
+     * TODO add param checkRemoved if true the not add tag because was removed
+     * tag is always added when typed in tag input field
+     */
+    private fun textWat(split: Boolean): TextWatcher {
+        val test: TextWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                Log.d(TAG, "cs.toString() afterTextChanged:")
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                Log.d(TAG, "cs.toString() beforeTextChanged:")
+            }
+
+            override fun onTextChanged(cs: CharSequence, start: Int, before: Int, count: Int) {
+                Log.d(TAG, "cs.toString() onTextChanged: ${cs.toString()} ")
+                if (cs.toString().trim().isEmpty()) {
+                    return
+                }
+                if (cs.isEmpty() || start >= cs.length || start < 0) {
+                    return
+                }
+                Log.d(TAG, "cs.toString(): ${cs.toString()} ")
+                if (cs.subSequence(start, start + 1).toString().equals(" ", true)) {
                     Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_SPACE")
-                    val chip = Chip(context)
-                    chip.text = (view as EditText).text
-                    chip.chipIcon = ContextCompat.getDrawable(
-                        requireContext(),
-                        R.drawable.ic_launcher_background
-                    )
-                    chip.isChipIconVisible = false
-                    chip.isCloseIconVisible = true
-                    chip.isClickable = true
-                    chip.isCheckable = false
-                    chipGroup.addView(chip as View)
-                    chip.setOnCloseIconClickListener { chipGroup.removeView(chip as View) }
-                    tagInput.setText("")
-                    return@setOnKeyListener true
+                    textToChip(cs.toString(),split)
+                    binding.tagInput.setText("")
                 }
-                if (i == KeyEvent.KEYCODE_DEL
-                    && tagInput.text.toString().isEmpty()
-                    &&  keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                    && chipGroup.childCount>0) {
-                    Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_BACK")
-                    chipGroup.removeViewAt(chipGroup.childCount-1)
-                    return@setOnKeyListener true
+            }
+        }
+        return test
+    }
+
+    private fun isTag(stag: String): Boolean {
+        var test: Boolean = false
+        binding.chipGroup.forEach {
+            val chip = it as Chip
+            if (chip.text.toString().uppercase() == stag.uppercase())
+                test = true
+        }
+        return test
+    }
+    private fun changeBinding() {
+
+        binding.apply {
+            tagInput.setOnEditorActionListener { v, actionId, event ->
+                Log.d(TAG, "setOnEditorActionListener")
+                return@setOnEditorActionListener when (actionId) {
+                    EditorInfo.IME_ACTION_NEXT -> {
+                        Log.d(TAG, "setOnEditorActionListener enter")
+                        if (tagInput.text.toString().trim().isEmpty()) {
+                            todoDescription.requestFocus()
+                        }else{
+                            textToChip(tagInput.text.toString().trim(),false)
+                            tagInput.setText("")
+                        }
+                        true
+                    }
+                    else -> {
+                        Log.d(TAG, "setOnEditorActionListener nt enter")
+                        false
+                    }
                 }
-                return@setOnKeyListener false
+
+            }
+            todoTitle.addTextChangedListener(textWat(true))
+        }
+    }
+    private fun textToChip(text: String,split: Boolean){
+        if(!split)
+        {
+            if (!isTag(text.trim())) {
+                val chip = Chip(context)
+                chip.text = text.trim()
+                chip.chipIcon = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_launcher_background
+                )
+                chip.isChipIconVisible = false
+                chip.isCloseIconVisible = true
+                chip.isClickable = true
+                chip.isCheckable = false
+                binding.chipGroup.addView(chip as View)
+                chip.setOnCloseIconClickListener { binding.chipGroup.removeView(chip as View) }
+            }
+            return
+        }
+        text.trim().split(" ").forEach {
+            if (!isTag(it)) {
+                val chip = Chip(context)
+                chip.text = it.trim()
+                chip.chipIcon = ContextCompat.getDrawable(
+                    requireContext(),
+                    R.drawable.ic_launcher_background
+                )
+                chip.isChipIconVisible = false
+                chip.isCloseIconVisible = true
+                chip.isClickable = true
+                chip.isCheckable = false
+                binding.chipGroup.addView(chip as View)
+                chip.setOnCloseIconClickListener { binding.chipGroup.removeView(chip as View) }
             }
         }
     }
-
     private fun saveToDo() {
         startDateTime =
             stringToLocalDateTime(binding.buttonDate.text.toString() + " " + binding.buttonTime.text)
@@ -245,8 +318,8 @@ class AddToDoFragment : Fragment() {
         toDoItem = ToDoItem(
             UUID.randomUUID(),
             todo.dateday,
-            binding.todoTitle.text.toString(),
-            binding.todoDescription.text.toString(),
+            binding.todoTitle.text.toString().trim(),
+            binding.todoDescription.text.toString().trim(),
             startDateTime,
             0,
             Clock.System.now().toEpochMilliseconds(),

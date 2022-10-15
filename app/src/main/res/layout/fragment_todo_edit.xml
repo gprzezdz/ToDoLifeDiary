@@ -78,7 +78,7 @@
                 android:id="@+id/tag_input"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:imeOptions="actionNone"
+                android:imeOptions="actionNext"
                 android:inputType="textAutoComplete"
                 android:singleLine="true"
                 app:layout_constraintTop_toBottomOf="@id/item_name_label" />
