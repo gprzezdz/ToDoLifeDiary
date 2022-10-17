@@ -1,4 +1,5 @@
 # ToDoLifeDiary
-First Android App
-Goal to learn Kotlin language and Android environment as Android Studio, libs, 
-framework and so on
+
+First Android App<br/>
+Goal to learn Kotlin language and Android environment<br/>
+as Android Studio, libs, framework and so on
