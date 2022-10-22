@@ -11,7 +11,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "pl.przezdziecki.todolifediary"
+        applicationId "pl.przezdziecki.todolifediary.gp"
         minSdk 29
         targetSdkVersion 31
         versionCode 1
