@@ -90,8 +90,8 @@ class CommentPhotoFragment : Fragment() {
         binding.photoId.setOnClickListener {
             val file = File(Uri.parse(toDoPhotoEx.photoUriString).path)
             val uri = FileProvider.getUriForFile(
-                context!!,
-                "pl.przezdziecki.todolifediary.fileprovider",
+                requireContext(),
+                BuildConfig.APPLICATION_ID+".provider",
                 file
             )
             val intent = Intent()

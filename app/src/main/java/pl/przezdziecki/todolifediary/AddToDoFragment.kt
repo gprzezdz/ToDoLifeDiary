@@ -86,7 +86,7 @@ class AddToDoFragment : Fragment() {
         val types = arrayOf("Year", "Month", "Week", "Day")
         val ii = types.indexOf(binding.buttonTodoType.text)
 
-        val m = MaterialAlertDialogBuilder(context!!)
+        val m = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Chose type")
             .setSingleChoiceItems(types, ii, DialogInterface.OnClickListener { dialogInterface, i ->
                 binding.buttonTodoType.text = types[i]
