@@ -5,6 +5,9 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
 }
+ext{
+    datacomplikacji = new Date().format('yyyyMMdd.HHmmss')
+}
 
 android {
     compileSdkVersion 33
@@ -15,8 +18,8 @@ android {
         minSdk 29
         targetSdkVersion 33
         versionCode 1
-        versionName "1.0"
-
+        versionName "gp.snap.$datacomplikacji"
+        archivesBaseName = "ToDoLifeDiary-$versionName"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -24,6 +27,17 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+             debuggable = false
+            jniDebuggable = false
+            renderscriptDebuggable = false
+            resValue "string", "app_name", "ToDoLifeDiary"
+        }
+         debug {
+            applicationIdSuffix = '.dev'
+            versionNameSuffix ".dev"
+            jniDebuggable true
+            debuggable true
+            resValue "string", "app_name", "ToDoLifeDiary.gp"
         }
     }
     compileOptions {
