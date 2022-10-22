@@ -190,8 +190,8 @@ class ToDoDetailsFragment : Fragment() {
         val file = createImageFile(toDoPhotoEx)
         try {
             uri = FileProvider.getUriForFile(
-                context!!,
-                "pl.przezdziecki.todolifediary.fileprovider",
+                requireContext(),
+                BuildConfig.APPLICATION_ID+".provider",
                 file
             )
         } catch (e: Exception) {
@@ -244,7 +244,7 @@ class ToDoDetailsFragment : Fragment() {
     private fun createImageFile(todophoto: ToDoPhotoEx): File {
         val date =
             SimpleDateFormat("yyyy-MM-dd").format(Date(todophoto.todoComment!!.insertDateTime))
-        val imageDirectory = context!!.getExternalFilesDir("Photos")
+        val imageDirectory = requireContext().getExternalFilesDir("Photos")
 
         val f = File("${imageDirectory}/${date}")
         f.mkdirs()
