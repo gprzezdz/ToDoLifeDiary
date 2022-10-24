@@ -17,6 +17,7 @@ import pl.przezdziecki.todolifediary.databinding.FragmentCalendarBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+private var TAG: String = "CalendarFragment"
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -43,14 +44,14 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = ItemCalendarToDoListAdapter {
-            Log.d("ToDoListFragment", "kliknął ${it.todo_uuid}")
+            Log.d(TAG, "kliknął ${it.todo_uuid}")
             val action =
                 CalendarFragmentDirections.actionDateListFragmentToToDoDetailsFragment(it.todo_uuid)
             this.findNavController().navigate(action)
         }
 
         initCalendar()
-        Log.d("CalendarFragment", "onViewCreated")
+        Log.d(TAG, "onViewCreated")
         binding.recyclerViewDate.layoutManager = GridLayoutManager(this.context, 1)
         binding.recyclerViewDate.adapter = adapter
         toDoLifeViewModel.todoItemList= toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
