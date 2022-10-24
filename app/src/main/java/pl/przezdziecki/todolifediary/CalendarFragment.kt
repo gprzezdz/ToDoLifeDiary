@@ -12,11 +12,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import pl.przezdziecki.todolifediary.databinding.FragmentCalendarBinding
 import java.text.SimpleDateFormat
 import java.util.*
 
+private var TAG: String = "CalendarFragment"
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -43,14 +45,14 @@ class CalendarFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val adapter = ItemCalendarToDoListAdapter {
-            Log.d("ToDoListFragment", "kliknął ${it.todo_uuid}")
+            Log.d(TAG, "kliknął ${it.todo_uuid}")
             val action =
                 CalendarFragmentDirections.actionDateListFragmentToToDoDetailsFragment(it.todo_uuid)
             this.findNavController().navigate(action)
         }
 
         initCalendar()
-        Log.d("CalendarFragment", "onViewCreated")
+        Log.d(TAG, "onViewCreated")
         binding.recyclerViewDate.layoutManager = GridLayoutManager(this.context, 1)
         binding.recyclerViewDate.adapter = adapter
         toDoLifeViewModel.todoItemList= toDoLifeViewModel.loadToDoItems(  toDoLifeViewModel.currentDateDay)
@@ -65,10 +67,12 @@ class CalendarFragment : Fragment() {
             this.findNavController().navigate(action)
         }
         binding.recyclerViewDate.setHasFixedSize(true)
+        (activity?.application as ToDoLiveDiaryApplication).lastFragment="CALENDAR"
     }
 
     private fun initCalendar() {
-       if(toDoLifeViewModel.currentDateDay==0L)
+        Log.d(TAG, "initCalendar lastFragment:  ${  (activity?.application as ToDoLiveDiaryApplication).lastFragment}")
+        if(  (activity?.application as ToDoLiveDiaryApplication).lastFragment=="CALENDAR" || toDoLifeViewModel.currentDateDay==0L)
        {
            val now: Instant = Clock.System.now()
            val today: LocalDate = now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date
