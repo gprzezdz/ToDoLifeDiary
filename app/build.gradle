@@ -14,11 +14,11 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "pl.przezdziecki.todolifediary.dev"
+        applicationId "pl.przezdziecki.todolifediary"
         minSdk 29
         targetSdkVersion 33
-        versionCode 1
-        versionName "dev.snap.$datacomplikacji"
+        versionCode 4
+        versionName "$datacomplikacji"
         archivesBaseName = "ToDoLifeDiary-$versionName"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -33,11 +33,10 @@ android {
             resValue "string", "app_name", "ToDoLifeDiary"
         }
          debug {
-            applicationIdSuffix = '.dev'
-            versionNameSuffix ".dev"
+
             jniDebuggable true
             debuggable true
-            resValue "string", "app_name", "ToDoLifeDiary.dev"
+            resValue "string", "app_name", "ToDoLifeDiary"
         }
     }
     compileOptions {
