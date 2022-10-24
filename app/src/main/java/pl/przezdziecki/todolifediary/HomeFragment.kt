@@ -63,6 +63,7 @@ class HomeFragment : Fragment() {
         binding.recyclerViewDate.adapter = adapter
         loadListToDo("DAY")
         bindingButtonsAction()
+        (activity?.application as ToDoLiveDiaryApplication).lastFragment="HOME"
     }
 
     private fun bindingButtonsAction() {

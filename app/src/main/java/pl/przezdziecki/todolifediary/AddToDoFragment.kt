@@ -80,6 +80,7 @@ class AddToDoFragment : Fragment() {
             toDoTypeDialog()
         }
         changeBinding()
+        (activity?.application as ToDoLiveDiaryApplication).lastFragment="ADDTODO"
     }
 
     private fun toDoTypeDialog() {

@@ -20,8 +20,9 @@ import pl.przezdziecki.todolifediary.db.ToDoRoomDatabase
 
 
 class ToDoLiveDiaryApplication : Application() {
+   var lastFragment = ""
+
     // Using by lazy so the database is only created when needed
     // rather than when the application starts
     val database: ToDoRoomDatabase by lazy { ToDoRoomDatabase.getDatabase(this) }
-    //val database: ToDoRoomDatabase = ToDoRoomDatabase.getDatabase(this)
 }

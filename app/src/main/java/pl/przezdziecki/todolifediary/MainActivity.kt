@@ -12,7 +12,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import pl.przezdziecki.todolifediary.databinding.ActivityMainBinding
-import java.io.File
 
 private var TAG: String = "MainActivity"
 
