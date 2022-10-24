@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import pl.przezdziecki.todolifediary.databinding.FragmentCalendarBinding
 import java.text.SimpleDateFormat
@@ -66,10 +67,12 @@ class CalendarFragment : Fragment() {
             this.findNavController().navigate(action)
         }
         binding.recyclerViewDate.setHasFixedSize(true)
+        (activity?.application as ToDoLiveDiaryApplication).lastFragment="CALENDAR"
     }
 
     private fun initCalendar() {
-       if(toDoLifeViewModel.currentDateDay==0L)
+        Log.d(TAG, "initCalendar lastFragment:  ${  (activity?.application as ToDoLiveDiaryApplication).lastFragment}")
+        if(  (activity?.application as ToDoLiveDiaryApplication).lastFragment=="CALENDAR" || toDoLifeViewModel.currentDateDay==0L)
        {
            val now: Instant = Clock.System.now()
            val today: LocalDate = now.toLocalDateTime(kotlinx.datetime.TimeZone.currentSystemDefault()).date

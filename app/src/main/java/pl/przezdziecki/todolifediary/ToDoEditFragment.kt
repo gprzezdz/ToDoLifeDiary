@@ -239,6 +239,7 @@ class ToDoEditFragment : Fragment() {
             findNavController().navigateUp()
         }
         changeBinding()
+        (activity?.application as ToDoLiveDiaryApplication).lastFragment="TODODETAILSEDIT"
     }
 
     private fun toDoTypeDialog() {

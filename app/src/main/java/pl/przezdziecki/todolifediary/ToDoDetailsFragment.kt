@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -52,12 +51,11 @@ class ToDoDetailsFragment : Fragment() {
 
         }
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("ToDoDetailsFragment", "onViewCreated")
 
-        val adapter = ItemCommentListAdapter {
+        Log.d("ToDoDetailsFragment", "onViewCreated")
+           val adapter = ItemCommentListAdapter {
             Log.d(TAG, "kliknął ${it.commentUuid}")
             if (it.fileType == "JPG") {
                 val toDoPhotoEx = ToDoPhotoEx()
@@ -160,6 +158,7 @@ class ToDoDetailsFragment : Fragment() {
                 ToDoDetailsFragmentDirections.actionToDoDetailsFragmentToToDoEditFragment(itemToDo.todo_uuid)
             this.findNavController().navigate(action)
         }
+        (activity?.application as ToDoLiveDiaryApplication).lastFragment="TODODETAILS"
     }
 
     private fun takePhoto() {
