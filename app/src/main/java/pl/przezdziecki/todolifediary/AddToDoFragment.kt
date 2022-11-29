@@ -71,7 +71,7 @@ class AddToDoFragment : Fragment() {
         binding.buttonCancellTodo.setOnClickListener {
             findNavController().navigateUp()
         }
-        Log.d("AddToDoFragment", "startDateTime  ${startDateTime}")
+        Log.d(TAG, "startDateTime  ${startDateTime}")
         if (startDateTime == 0.toLong()) {
             startDateTime = Clock.System.now().toEpochMilliseconds()
         }
@@ -80,7 +80,7 @@ class AddToDoFragment : Fragment() {
             toDoTypeDialog()
         }
         changeBinding()
-        (activity?.application as ToDoLiveDiaryApplication).lastFragment="ADDTODO"
+        (activity?.application as ToDoLiveDiaryApplication).lastFragment = "ADDTODO"
     }
 
     private fun toDoTypeDialog() {
@@ -222,7 +222,7 @@ class AddToDoFragment : Fragment() {
                 Log.d(TAG, "cs.toString(): ${cs.toString()} ")
                 if (cs.subSequence(start, start + 1).toString().equals(" ", true)) {
                     Log.d(TAG, "tagInput.setOnKeyListener: KEYCODE_SPACE")
-                    textToChip(cs.toString(),split)
+                    textToChip(cs.toString(), split)
                     binding.tagInput.setText("")
                 }
             }
@@ -242,15 +242,15 @@ class AddToDoFragment : Fragment() {
     private fun changeBinding() {
 
         binding.apply {
-            tagInput.setOnEditorActionListener { v, actionId, event ->
+            tagInput.setOnEditorActionListener { _, actionId, _ ->
                 Log.d(TAG, "setOnEditorActionListener")
                 return@setOnEditorActionListener when (actionId) {
                     EditorInfo.IME_ACTION_NEXT -> {
                         Log.d(TAG, "setOnEditorActionListener enter")
                         if (tagInput.text.toString().trim().isEmpty()) {
                             todoDescription.requestFocus()
-                        }else{
-                            textToChip(tagInput.text.toString().trim(),false)
+                        } else {
+                            textToChip(tagInput.text.toString().trim(), false)
                             tagInput.setText("")
                         }
                         true
@@ -265,9 +265,8 @@ class AddToDoFragment : Fragment() {
             todoTitle.addTextChangedListener(textWat(true))
         }
     }
-    private fun textToChip(text: String,split: Boolean){
-        if(!split)
-        {
+    private fun textToChip(text: String, split: Boolean) {
+        if (!split) {
             if (!isTag(text.trim())) {
                 val chip = Chip(context)
                 chip.text = text.trim()

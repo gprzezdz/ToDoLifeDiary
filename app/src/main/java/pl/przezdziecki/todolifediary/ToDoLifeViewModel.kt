@@ -36,7 +36,7 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     }
 
     fun saveTag(tag: Tag) {
-        viewModelScope.launch { itemDao.insertTag(tag) }
+        viewModelScope.launch { itemDao.updateTag(tag) }
     }
 
     fun deleteTag(tag: Tag) {
@@ -54,10 +54,13 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
     }
 
     fun saveToDoItem(toDoItem: ToDoItem) {
-        viewModelScope.launch { itemDao.insertToDoItem(toDoItem) }
+        viewModelScope.launch { itemDao.updateToDoItem(toDoItem) }
     }
 
     fun saveToDoComment(toDoComment: ToDoComment) {
+        viewModelScope.launch { itemDao.updateToDoItemComment(toDoComment) }
+    }
+    fun insertToDoComment(toDoComment: ToDoComment) {
         viewModelScope.launch { itemDao.insertToDoItemComment(toDoComment) }
     }
 
@@ -103,6 +106,10 @@ class ToDoLifeViewModel(private val itemDao: ToDoDAO) : ViewModel() {
 
     fun insertToDoTagRel(rel: ToDoTagRel) {
         viewModelScope.launch { itemDao.insertToDoTagRel(rel) }
+    }
+
+    fun deleteAllToDoTagRel(todoUuid: UUID) {
+        viewModelScope.launch { itemDao.deleteAllToDoTagRel(todoUuid) }
     }
 
     class ToDoLifeViewModelFactory(private val itemDao: ToDoDAO) : ViewModelProvider.Factory {

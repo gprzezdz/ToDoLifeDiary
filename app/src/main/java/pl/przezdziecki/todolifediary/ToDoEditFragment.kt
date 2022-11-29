@@ -147,7 +147,7 @@ class ToDoEditFragment : Fragment() {
 
     private fun changeBinding() {
         binding.apply {
-            tagInput.setOnEditorActionListener { v, actionId, event ->
+            tagInput.setOnEditorActionListener { _, actionId, _ ->
                 Log.d(TAG, "setOnEditorActionListener")
                 return@setOnEditorActionListener when (actionId) {
                     EditorInfo.IME_ACTION_NEXT -> {
@@ -246,7 +246,7 @@ class ToDoEditFragment : Fragment() {
         val types = arrayOf("Year", "Month", "Week", "Day")
         val ii = types.indexOf(binding.buttonTodoType.text)
 
-        val m = MaterialAlertDialogBuilder(context!!)
+        val m = MaterialAlertDialogBuilder(requireContext())
             .setTitle("Chose type")
             .setSingleChoiceItems(types, ii, DialogInterface.OnClickListener { dialogInterface, i ->
                 binding.buttonTodoType.text = types[i]
@@ -289,6 +289,7 @@ class ToDoEditFragment : Fragment() {
         itemToDo.description = binding.todoDescription.text.toString().trim()
         itemToDo.todoType = binding.buttonTodoType.text.toString().uppercase()
         toDoLifeViewModel.saveToDoItem(itemToDo)
+        toDoLifeViewModel.deleteAllToDoTagRel(itemToDo.todo_uuid)
         binding.chipGroup.forEach {
             val chip = it as Chip
             var tag = Tag(

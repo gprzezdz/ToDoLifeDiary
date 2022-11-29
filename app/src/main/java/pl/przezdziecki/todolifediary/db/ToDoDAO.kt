@@ -46,6 +46,9 @@ interface ToDoDAO {
     @Delete
     suspend fun deleteTag(item: Tag)
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateTag(item: Tag)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToDoTagRel(item: ToDoTagRel)
 
@@ -58,13 +61,20 @@ interface ToDoDAO {
     @Delete
     suspend fun deleteToDoItem(item: ToDoItem)
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateToDoItem(item: ToDoItem)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertToDoItemComment(item: ToDoComment)
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun updateToDoItemComment(item: ToDoComment)
     @Delete
     suspend fun deleteToDoItemComment(item: ToDoComment)
 
     @Query("UPDATE todoitem_table set close_date_time=:closeDateTime WHERE todo_uuid = :todoUuid")
     suspend fun closeToDo(todoUuid: UUID,closeDateTime:Long)
+
+    @Query("delete  from todo_tag_rel where todo_uuid = :todoUuid")
+    suspend fun deleteAllToDoTagRel(todoUuid: UUID)
 }
