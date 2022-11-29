@@ -77,8 +77,11 @@ class CommentPhotoFragment : Fragment() {
             findNavController().navigateUp()
         }
         binding.buttonSavePhoto.setOnClickListener {
-            if (navigationArgs.actionClose == "ADDPHOTO" || navigationArgs.actionClose == "EDITPHOTO") {
+            if (navigationArgs.actionClose == "EDITPHOTO") {
                 savePhoto()
+            }
+            if (navigationArgs.actionClose == "ADDPHOTO" ) {
+                insertPhoto()
             }
 
             findNavController().navigateUp()
@@ -102,7 +105,14 @@ class CommentPhotoFragment : Fragment() {
             startActivity(intent)
         }
     }
-
+    private fun insertPhoto() {
+        binding.apply {
+            toDoPhotoEx.todoComment!!.comment = commentDescription.text.toString()
+        }
+        toDoPhotoEx.todoComment!!.fileType = "JPG"
+        Log.d(TAG, "insert photo: ${toDoPhotoEx.todoComment!!.fileType}")
+        toDoLifeViewModel.insertToDoComment(toDoPhotoEx.todoComment!!)
+    }
     private fun savePhoto() {
         binding.apply {
             toDoPhotoEx.todoComment!!.comment = commentDescription.text.toString()
