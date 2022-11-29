@@ -18,8 +18,8 @@ android {
         minSdk 29
         targetSdkVersion 33
         versionCode 1
-        versionName "dev.snap.$datacomplikacji"
-        archivesBaseName = "ToDoLifeDiary-$versionName"
+        versionName "snap.$datacomplikacji"
+        archivesBaseName = "ToDoLifeDiary.dev-$versionName"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
