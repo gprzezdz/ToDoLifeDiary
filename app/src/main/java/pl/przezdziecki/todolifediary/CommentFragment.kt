@@ -140,6 +140,12 @@ class CommentFragment : Fragment() {
             } else
                 itemComment.cost = commentCost.text.toString().toDouble()
         }
+        if (navigationArgs.actionClose == "EDIT") {
+            toDoLifeViewModel.saveToDoComment(itemComment)
+        }
+        if (navigationArgs.actionClose == "ADD") {
+            toDoLifeViewModel.insertToDoComment(itemComment)
+        }
         toDoLifeViewModel.saveToDoComment(itemComment)
         if (navigationArgs.actionClose == "CLOSE") {
             toDoLifeViewModel.closeToDo(itemComment.todoUuid, itemComment.comDateTime)
