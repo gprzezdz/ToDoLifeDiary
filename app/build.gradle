@@ -19,7 +19,7 @@ android {
         targetSdkVersion 33
         versionCode 1
         versionName "snap.$datacomplikacji"
-        archivesBaseName = "gp.ToDoLifeDiary-$versionName"
+        archivesBaseName = "ToDoLifeDiary.gp-$versionName"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -37,7 +37,7 @@ android {
             versionNameSuffix ".dev"
             jniDebuggable true
             debuggable true
-            resValue "string", "app_name", "gp.ToDoLifeDiary"
+            resValue "string", "app_name", "ToDoLifeDiary.gp"
         }
     }
     compileOptions {
