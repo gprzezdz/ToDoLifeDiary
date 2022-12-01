@@ -17,7 +17,7 @@ android {
         applicationId "pl.przezdziecki.todolifediary"
         minSdk 29
         targetSdkVersion 33
-        versionCode 5
+        versionCode 6
         versionName "$datacomplikacji"
         archivesBaseName = "ToDoLifeDiary-$versionName"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
