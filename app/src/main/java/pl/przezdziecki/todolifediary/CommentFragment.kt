@@ -146,11 +146,12 @@ class CommentFragment : Fragment() {
         if (navigationArgs.actionClose == "ADD") {
             toDoLifeViewModel.insertToDoComment(itemComment)
         }
-        toDoLifeViewModel.saveToDoComment(itemComment)
         if (navigationArgs.actionClose == "CLOSE") {
+            toDoLifeViewModel.insertToDoComment(itemComment)
             toDoLifeViewModel.closeToDo(itemComment.todoUuid, itemComment.comDateTime)
         }
         if (navigationArgs.actionClose == "OPEN") {
+            toDoLifeViewModel.insertToDoComment(itemComment)
             toDoLifeViewModel.closeToDo(itemComment.todoUuid,0L)
         }
 
