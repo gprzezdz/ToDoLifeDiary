@@ -15,7 +15,7 @@ interface ToDoDAO {
     @Query("SELECT * from todoitem_table WHERE dateday = :id order by start_date_time asc ")
     fun getToDoItemByDate(id: Long): Flow<List<ToDoItem>>
 
-    @Query("SELECT * from todoitem_table WHERE (dateday < :id and close_date_time=0) or dateday = :id " +
+    @Query("SELECT * from todoitem_table WHERE (dateday < :id and close_date_time=0) or dateday = :id or   close_date_time=:id" +
             " or todo_uuid in (select todo_uuid from todocomment_table where com_date_time>=:id and com_date_time<=(:id +24*60*60*1000  ))" +
             " order by start_date_time asc ")
     fun getDay(id: Long): Flow<List<ToDoItem>>
